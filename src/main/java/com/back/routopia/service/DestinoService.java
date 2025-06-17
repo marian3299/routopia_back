@@ -3,10 +3,12 @@ package com.back.routopia.service;
 import com.back.routopia.entity.Destino;
 import com.back.routopia.repositroy.DestinoRespository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class DestinoService {
     @Autowired
     private DestinoRespository destinoRespository;
@@ -21,5 +23,5 @@ public class DestinoService {
 
     public void delete_destino(Long id) { destinoRespository.deleteById(id); }
 
-    public void update_destino (Destino destino){ destinoRespository.save(destino); }
+    public Destino update_destino (Destino destino){ return destinoRespository.save(destino); }
 }
