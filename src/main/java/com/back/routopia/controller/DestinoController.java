@@ -1,5 +1,6 @@
 package com.back.routopia.controller;
 
+import com.back.routopia.dto.DestinoDTO;
 import com.back.routopia.entity.Destino;
 import com.back.routopia.service.DestinoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/destino")
+@CrossOrigin(origins = "*")
 @Tag(name = "Controller de Destinos", description = "CRUD de destinos")
 public class DestinoController {
 
@@ -25,8 +27,25 @@ public class DestinoController {
 
     @Operation(summary = "Get all Destinos")
     @GetMapping
-    public ResponseEntity<List<Destino>> find_all_destino(){
-        return ResponseEntity.ok(destinoService.list_all());
+    public ResponseEntity<List<DestinoDTO>> find_all_destino(){
+        List<Destino> destinos = destinoService.list_all();
+
+        List<DestinoDTO> response_list = destinos.stream()
+                .map(destino -> new DestinoDTO(
+                        destino.getName(),
+                        destino.getId(),
+                        destino.getCategory().name(),
+                        destino.getCity(),
+                        destino.getPrecio(),
+                        destino.getDuration_time(),
+                        destino.getDescription(),
+                        destino.getAddress(),
+                        destino.getLanguage().name(),
+                        destino.getPunctuation()
+                ))
+                .toList();
+
+        return ResponseEntity.ok(response_list);
     }
 
     @Operation(summary = "Get Destino by id")

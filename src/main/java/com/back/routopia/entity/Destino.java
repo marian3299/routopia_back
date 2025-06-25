@@ -26,13 +26,16 @@ public class Destino {
     private Language language;
     @Column
     private String address;
-    @Column Float punctuation;
+    @Column
+    private Float punctuation;
+    @Column
+    private String city;
 
     public Destino() {
 
     }
 
-    public Destino(Long id, String name, Float precio, String duration_time, String description, Category category, Language language, String address, Float punctuation) {
+    public Destino(Long id, String name, Float precio, String duration_time, String description, Category category, Language language, String address, Float punctuation, String city) {
         this.id = id;
         this.name = name;
         this.precio = precio;
@@ -42,9 +45,10 @@ public class Destino {
         this.language = language;
         this.address = address;
         this.punctuation = punctuation;
+        this.city = city;
     }
 
-    public Destino(String name, Float precio, String duration_time, Category category, String description, Language language, String address, Float punctuation) {
+    public Destino(String name, Float precio, String duration_time, Category category, String description, Language language, String address, Float punctuation, String city) {
         this.name = name;
         this.precio = precio;
         this.duration_time = duration_time;
@@ -53,6 +57,7 @@ public class Destino {
         this.language = language;
         this.address = address;
         this.punctuation = punctuation;
+        this.city = city;
     }
 
     public Long getId() {
@@ -125,5 +130,13 @@ public class Destino {
 
     public void setPunctuation(Float punctuation) {
         this.punctuation = punctuation;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCtiy(String ctiy) {
+        this.city = ctiy;
     }
 }
