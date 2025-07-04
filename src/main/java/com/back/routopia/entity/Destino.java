@@ -30,12 +30,14 @@ public class Destino {
     private Float punctuation;
     @Column
     private String city;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     public Destino() {
 
     }
 
-    public Destino(Long id, String name, Float precio, String duration_time, String description, Category category, Language language, String address, Float punctuation, String city) {
+    public Destino(Long id, String name, Float precio, String duration_time, String description, Category category, Language language, String address, Float punctuation, String city, String imageUrl) {
         this.id = id;
         this.name = name;
         this.precio = precio;
@@ -46,9 +48,10 @@ public class Destino {
         this.address = address;
         this.punctuation = punctuation;
         this.city = city;
+        this.imageUrl = imageUrl;
     }
 
-    public Destino(String name, Float precio, String duration_time, Category category, String description, Language language, String address, Float punctuation, String city) {
+    public Destino(String name, Float precio, String duration_time, Category category, String description, Language language, String address, Float punctuation, String city, String imageUrl) {
         this.name = name;
         this.precio = precio;
         this.duration_time = duration_time;
@@ -58,6 +61,7 @@ public class Destino {
         this.address = address;
         this.punctuation = punctuation;
         this.city = city;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -138,5 +142,17 @@ public class Destino {
 
     public void setCtiy(String ctiy) {
         this.city = ctiy;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

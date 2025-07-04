@@ -1,16 +1,17 @@
 package com.back.routopia.controller;
 
 import com.back.routopia.dto.DestinoDTO;
+import com.back.routopia.entity.Category;
 import com.back.routopia.entity.Destino;
+import com.back.routopia.entity.Language;
 import com.back.routopia.service.DestinoService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -59,7 +60,35 @@ public class DestinoController {
 
     @Operation(summary = "Crear destino")
     @PostMapping
-    public ResponseEntity<Destino> create_destino (@RequestBody Destino destino){
+    public ResponseEntity<Destino> create_destino (
+            @RequestParam("name") String name,
+            @RequestParam("price") Float price,
+            @RequestParam("duration") String duration,
+            @RequestParam("description") String description,
+            @RequestParam("language") String language,
+            @RequestParam("location") String location,
+            @RequestParam("category") String category,
+            @RequestParam("score") Float score,
+            @RequestParam("city") String city,
+            @RequestParam(value = "image", required = false) MultipartFile image
+    ){
+        Destino destino = new Destino();
+        destino.setName(name);
+        destino.setPrecio(price);
+        destino.setDuration_time(duration);
+        destino.setDescription(description);
+        destino.setLanguage(Language.valueOf(language));
+        destino.setAddress(location);
+        destino.setCategory(Category.valueOf(category));
+        destino.setPunctuation(score);
+        destino.setCity(city);
+
+        if (image != null && !image.isEmpty()) {
+            // Por ahora solo guardamos el nombre del archivo
+            // Más adelante puedes implementar la subida a S3
+            destino.setImageUrl(image.getOriginalFilename());
+        }
+
         return ResponseEntity.ok(destinoService.create_destino(destino));
     }
 
