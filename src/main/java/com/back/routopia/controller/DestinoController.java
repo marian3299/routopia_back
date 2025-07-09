@@ -16,6 +16,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/destino")
@@ -41,7 +43,9 @@ public class DestinoController {
                         destino.getDuration_time(),
                         destino.getDescription(),
                         destino.getAddress(),
-                        destino.getLanguage().name(),
+                        destino.getLanguages().stream()
+                                .map(Language::name)
+                                .collect(Collectors.toSet()),
                         destino.getPunctuation()
                 ))
                 .toList();
@@ -65,7 +69,7 @@ public class DestinoController {
             @RequestParam("price") Float price,
             @RequestParam("duration") String duration,
             @RequestParam("description") String description,
-            @RequestParam("language") String language,
+            @RequestParam("languages") List<String> languages,
             @RequestParam("location") String location,
             @RequestParam("category") String category,
             @RequestParam("score") Float score,
@@ -77,11 +81,15 @@ public class DestinoController {
         destino.setPrecio(price);
         destino.setDuration_time(duration);
         destino.setDescription(description);
-        destino.setLanguage(Language.valueOf(language));
         destino.setAddress(location);
         destino.setCategory(Category.valueOf(category));
         destino.setPunctuation(score);
         destino.setCity(city);
+
+        Set<Language> languageSet = languages.stream()
+                .map(Language::valueOf)
+                .collect(Collectors.toSet());
+        destino.setLanguages(languageSet);
 
         if (image != null && !image.isEmpty()) {
             // Por ahora solo guardamos el nombre del archivo

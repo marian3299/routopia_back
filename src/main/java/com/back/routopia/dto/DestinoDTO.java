@@ -2,6 +2,8 @@ package com.back.routopia.dto;
 
 import com.back.routopia.entity.Language;
 
+import java.util.Set;
+
 public class DestinoDTO {
     private Long id;
     private String name;
@@ -11,11 +13,11 @@ public class DestinoDTO {
     private Float precio;
     private String duration_time;
     private String description;
-    private String language;
+    private Set<String> languages;
     private String address;
     private Float punctuation;
 
-    public DestinoDTO(String name, Long id, String category, String city, Float precio, String duration_time, String description, String address, String language, Float punctuation) {
+    public DestinoDTO(String name, Long id, String category, String city, Float precio, String duration_time, String description, String address, Set<String> languages, Float punctuation) {
         this.name = name;
         this.id = id;
         this.category = category;
@@ -25,7 +27,7 @@ public class DestinoDTO {
         this.duration_time = duration_time;
         this.description = description;
         this.address = address;
-        this.language = language;
+        this.languages = languages;
         this.punctuation = punctuation;
     }
 
@@ -76,8 +78,8 @@ public class DestinoDTO {
         return address;
     }
 
-    public String getLanguage() {
-        return language;
+    public Set<String> getLanguages() {
+        return languages;
     }
 
     public Float getPunctuation() {

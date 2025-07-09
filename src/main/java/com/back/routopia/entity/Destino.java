@@ -3,6 +3,8 @@ package com.back.routopia.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "destinos")
 @Schema(description = "Entity que representa a un destino")
@@ -22,8 +24,6 @@ public class Destino {
     private String description;
     @Enumerated(EnumType.STRING)
     private Category category;
-    @Enumerated(EnumType.STRING)
-    private Language language;
     @Column
     private String address;
     @Column
@@ -32,32 +32,37 @@ public class Destino {
     private String city;
     @Column(name = "image_url")
     private String imageUrl;
+    @ElementCollection(targetClass = Language.class)
+    @CollectionTable(name = "destino_languages", joinColumns = @JoinColumn(name = "destino_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "language")
+    private Set<Language> languages;
 
     public Destino() {
 
     }
 
-    public Destino(Long id, String name, Float precio, String duration_time, String description, Category category, Language language, String address, Float punctuation, String city, String imageUrl) {
+    public Destino(Long id, String name, Float precio, String duration_time, String description, Category category, Set<Language> languages, String address, Float punctuation, String city, String imageUrl) {
         this.id = id;
         this.name = name;
         this.precio = precio;
         this.duration_time = duration_time;
         this.description = description;
         this.category = category;
-        this.language = language;
+        this.languages = languages;
         this.address = address;
         this.punctuation = punctuation;
         this.city = city;
         this.imageUrl = imageUrl;
     }
 
-    public Destino(String name, Float precio, String duration_time, Category category, String description, Language language, String address, Float punctuation, String city, String imageUrl) {
+    public Destino(String name, Float precio, String duration_time, Category category, String description, Set<Language> languages, String address, Float punctuation, String city, String imageUrl) {
         this.name = name;
         this.precio = precio;
         this.duration_time = duration_time;
         this.category = category;
         this.description = description;
-        this.language = language;
+        this.languages = languages;
         this.address = address;
         this.punctuation = punctuation;
         this.city = city;
@@ -112,12 +117,12 @@ public class Destino {
         this.category = category;
     }
 
-    public Language getLanguage() {
-        return language;
+    public Set<Language> getLanguages() {
+        return languages;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
+    public void setLanguages(Set<Language> languages) {
+        this.languages = languages;
     }
 
     public String getAddress() {
