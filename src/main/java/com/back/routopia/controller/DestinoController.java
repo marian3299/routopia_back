@@ -1,5 +1,6 @@
 package com.back.routopia.controller;
 
+import com.back.routopia.S3Service;
 import com.back.routopia.dto.DestinoDTO;
 import com.back.routopia.entity.Category;
 import com.back.routopia.entity.Destino;
@@ -28,6 +29,10 @@ public class DestinoController {
     @Autowired
     DestinoService destinoService;
 
+    @Autowired
+    private S3Service s3Service;
+
+
     @Operation(summary = "Get all Destinos")
     @GetMapping
     public ResponseEntity<List<DestinoDTO>> find_all_destino(){
@@ -46,7 +51,8 @@ public class DestinoController {
                         destino.getLanguages().stream()
                                 .map(Language::name)
                                 .collect(Collectors.toSet()),
-                        destino.getPunctuation()
+                        destino.getPunctuation(),
+                        destino.getImageUrl()
                 ))
                 .toList();
 
@@ -92,9 +98,8 @@ public class DestinoController {
         destino.setLanguages(languageSet);
 
         if (image != null && !image.isEmpty()) {
-            // Por ahora solo guardamos el nombre del archivo
-            // Más adelante puedes implementar la subida a S3
-            destino.setImageUrl(image.getOriginalFilename());
+            String imageUrl = s3Service.uploadFile(image);
+            destino.setImageUrl(imageUrl);
         }
 
         return ResponseEntity.ok(destinoService.create_destino(destino));

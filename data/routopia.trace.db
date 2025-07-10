@@ -1,0 +1,4 @@
+2025-07-09 22:13:01.979909-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "DELETE [*]* FROM DESTINO_LANGUAGES"; se esperaba "identifier"
+Syntax error in SQL statement "DELETE [*]* FROM DESTINO_LANGUAGES"; expected "identifier"; SQL statement:
+DELETE * FROM DESTINO_LANGUAGES [42001-232]

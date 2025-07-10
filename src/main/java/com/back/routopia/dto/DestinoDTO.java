@@ -16,8 +16,9 @@ public class DestinoDTO {
     private Set<String> languages;
     private String address;
     private Float punctuation;
+    private String imageUrl;
 
-    public DestinoDTO(String name, Long id, String category, String city, Float precio, String duration_time, String description, String address, Set<String> languages, Float punctuation) {
+    public DestinoDTO(String name, Long id, String category, String city, Float precio, String duration_time, String description, String address, Set<String> languages, Float punctuation, String imageUrl) {
         this.name = name;
         this.id = id;
         this.category = category;
@@ -29,6 +30,7 @@ public class DestinoDTO {
         this.address = address;
         this.languages = languages;
         this.punctuation = punctuation;
+        this.imageUrl = imageUrl;
     }
 
     private String category_to_country(String category){
@@ -84,5 +86,9 @@ public class DestinoDTO {
 
     public Float getPunctuation() {
         return punctuation;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
