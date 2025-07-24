@@ -39,7 +39,7 @@ public class DestinoDTO {
             case "JAPAN" -> "Japón";
             case "THAILAND" -> "Tailandia";
             case "GREECE" -> "Grecia";
-            case "CHIAPAS" -> "México";
+            case "MEXICO" -> "Mexico";
             default -> "Desconocido";
         };
     }
