@@ -1,8 +1,11 @@
 package com.back.routopia.service;
 
+import com.back.routopia.entity.Category;
 import com.back.routopia.entity.Destino;
 import com.back.routopia.repositroy.DestinoRespository;
+import com.back.routopia.specification.DestinoSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +20,10 @@ public class DestinoService {
         return destinoRespository.save(destino);
     }
 
-    public List<Destino> list_all() { return destinoRespository.findAll(); }
+    public List<Destino> list_all(Category category) {
+        Specification<Destino> spec = Specification.where(DestinoSpecification.hasCategory(category));
+        return destinoRespository.findAll(spec);
+    }
 
     public Optional<Destino> find_by_id(Long id) { return destinoRespository.findById(id); }
 
