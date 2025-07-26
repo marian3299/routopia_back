@@ -23,7 +23,7 @@ public class DestinoDTO {
         this.id = id;
         this.category = category;
         this.city = city;
-        this.location = city + ", " + category_to_country(category);;
+        this.location = city + ", " + category_to_country(category);
         this.precio = precio;
         this.duration_time = duration_time;
         this.description = description;

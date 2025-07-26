@@ -61,11 +61,25 @@ public class DestinoController {
 
     @Operation(summary = "Get Destino by id")
     @GetMapping("/{id}")
-    public ResponseEntity<Destino> find_destino_by_id(@PathVariable("id") Long id) {
+    public ResponseEntity<DestinoDTO> find_destino_by_id(@PathVariable("id") Long id) {
         Destino destino = destinoService.find_by_id(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Destino no encontrado"));
 
-        return ResponseEntity.ok(destino);
+        DestinoDTO destinoDTO = new DestinoDTO(
+                destino.getName(),
+                destino.getId(),
+                destino.getCategory().name(),
+                destino.getCity(),
+                destino.getPrecio(),
+                destino.getDuration_time(),
+                destino.getDescription(),
+                destino.getAddress(),
+                destino.getLanguages().stream().map(Language::name).collect(Collectors.toSet()),
+                destino.getPunctuation(),
+                destino.getImageUrl()
+        );
+
+        return ResponseEntity.ok(destinoDTO);
     }
 
     @Operation(summary = "Crear destino")
