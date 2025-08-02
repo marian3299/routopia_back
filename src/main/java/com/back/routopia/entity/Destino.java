@@ -21,7 +21,7 @@ public class Destino {
     private Float precio;
     @Column
     private String duration_time;
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String description;
     @Enumerated(EnumType.STRING)
     private Category category;
