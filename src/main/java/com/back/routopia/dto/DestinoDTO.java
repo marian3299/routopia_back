@@ -3,6 +3,7 @@ package com.back.routopia.dto;
 import com.back.routopia.entity.Language;
 
 import java.util.Set;
+import java.util.List;
 
 public class DestinoDTO {
     private Long id;
@@ -17,8 +18,9 @@ public class DestinoDTO {
     private String address;
     private Float punctuation;
     private String imageUrl;
+    private List<String> secondaryImages;
 
-    public DestinoDTO(String name, Long id, String category, String city, Float precio, String duration_time, String description, String address, Set<String> languages, Float punctuation, String imageUrl) {
+    public DestinoDTO(String name, Long id, String category, String city, Float precio, String duration_time, String description, String address, Set<String> languages, Float punctuation, String imageUrl, List<String> secondaryImages) {
         this.name = name;
         this.id = id;
         this.category = category;
@@ -31,6 +33,7 @@ public class DestinoDTO {
         this.languages = languages;
         this.punctuation = punctuation;
         this.imageUrl = imageUrl;
+        this.secondaryImages = secondaryImages;
     }
 
     private String category_to_country(String category){
@@ -90,5 +93,9 @@ public class DestinoDTO {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public List<String> getSecondaryImages() {
+        return secondaryImages;
     }
 }

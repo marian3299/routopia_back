@@ -52,7 +52,8 @@ public class DestinoController {
                                 .map(Language::name)
                                 .collect(Collectors.toSet()),
                         destino.getPunctuation(),
-                        destino.getImageUrl()
+                        destino.getImageUrl(),
+                        destino.getSecondaryImages()
                 ))
                 .toList();
 
@@ -76,7 +77,8 @@ public class DestinoController {
                 destino.getAddress(),
                 destino.getLanguages().stream().map(Language::name).collect(Collectors.toSet()),
                 destino.getPunctuation(),
-                destino.getImageUrl()
+                destino.getImageUrl(),
+                destino.getSecondaryImages()
         );
 
         return ResponseEntity.ok(destinoDTO);

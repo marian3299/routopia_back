@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "destinos")
@@ -32,6 +33,10 @@ public class Destino {
     private String city;
     @Column(name = "image_url")
     private String imageUrl;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "destino_secondary_images", joinColumns = @JoinColumn(name = "destino_id"))
+    @Column(name = "image_url")
+    private List<String> secondaryImages;
     @ElementCollection(targetClass = Language.class)
     @CollectionTable(name = "destino_languages", joinColumns = @JoinColumn(name = "destino_id"))
     @Enumerated(EnumType.STRING)
@@ -155,6 +160,14 @@ public class Destino {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public List<String> getSecondaryImages() {
+        return secondaryImages;
+    }
+
+    public void setSecondaryImages(List<String> secondaryImages) {
+        this.secondaryImages = secondaryImages;
     }
 
     public void setCity(String city) {
