@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -52,7 +53,8 @@ public class DestinoController {
                                 .map(Language::name)
                                 .collect(Collectors.toSet()),
                         destino.getPunctuation(),
-                        destino.getImageUrl()
+                        destino.getImageUrl(),
+                        destino.getSecondaryImages()
                 ))
                 .toList();
 
@@ -76,7 +78,8 @@ public class DestinoController {
                 destino.getAddress(),
                 destino.getLanguages().stream().map(Language::name).collect(Collectors.toSet()),
                 destino.getPunctuation(),
-                destino.getImageUrl()
+                destino.getImageUrl(),
+                destino.getSecondaryImages()
         );
 
         return ResponseEntity.ok(destinoDTO);
@@ -94,7 +97,8 @@ public class DestinoController {
             @RequestParam("category") String category,
             @RequestParam("score") Float score,
             @RequestParam("city") String city,
-            @RequestParam(value = "image", required = false) MultipartFile image
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            @RequestParam(value = "image_list", required = false) List<MultipartFile> imageList
     ){
         Destino destino = new Destino();
         destino.setName(name);
@@ -111,12 +115,31 @@ public class DestinoController {
                 .collect(Collectors.toSet());
         destino.setLanguages(languageSet);
 
+        Destino saved_destino = destinoService.create_destino(destino);
+
         if (image != null && !image.isEmpty()) {
-            String imageUrl = s3Service.uploadFile(image);
-            destino.setImageUrl(imageUrl);
+            String key = "main-images/" + saved_destino.getId() + "/" + image.getOriginalFilename();
+            String imageUrl = s3Service.uploadFile(image, key);
+            saved_destino.setImageUrl(imageUrl);
+        }
+        if (imageList != null && !imageList.isEmpty()) {
+            List<String> secondaryUrls = new ArrayList<>();
+
+            for (MultipartFile secondaryImage : imageList) {
+                if (!secondaryImage.isEmpty()) {
+                    String key = "imagenes-secundarias/" + saved_destino.getId() + "/" + secondaryImage.getOriginalFilename();
+                    String url = s3Service.uploadFile(secondaryImage, key);
+                    secondaryUrls.add(url);
+                }
+            }
+
+            // Guarda las URLs de imágenes secundarias
+            saved_destino.setSecondaryImages(secondaryUrls); // Este campo debe existir
         }
 
-        return ResponseEntity.ok(destinoService.create_destino(destino));
+        saved_destino = destinoService.create_destino(saved_destino);
+
+        return ResponseEntity.ok(saved_destino);
     }
 
     @Operation(summary = "Actualizar destino")

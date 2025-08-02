@@ -3,6 +3,7 @@ package com.back.routopia.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,6 +33,10 @@ public class Destino {
     private String city;
     @Column(name = "image_url")
     private String imageUrl;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "destino_secondary_images", joinColumns = @JoinColumn(name = "destino_id"))
+    @Column(name = "image_url")
+    private List<String> secondaryImages;
     @ElementCollection(targetClass = Language.class)
     @CollectionTable(name = "destino_languages", joinColumns = @JoinColumn(name = "destino_id"))
     @Enumerated(EnumType.STRING)
@@ -42,7 +47,7 @@ public class Destino {
 
     }
 
-    public Destino(Long id, String name, Float precio, String duration_time, String description, Category category, Set<Language> languages, String address, Float punctuation, String city, String imageUrl) {
+    public Destino(Long id, String name, Float precio, String duration_time, String description, Category category, Set<Language> languages, String address, Float punctuation, String city, String imageUrl, List<String> secondaryImages) {
         this.id = id;
         this.name = name;
         this.precio = precio;
@@ -54,9 +59,10 @@ public class Destino {
         this.punctuation = punctuation;
         this.city = city;
         this.imageUrl = imageUrl;
+        this.secondaryImages = secondaryImages;
     }
 
-    public Destino(String name, Float precio, String duration_time, Category category, String description, Set<Language> languages, String address, Float punctuation, String city, String imageUrl) {
+    public Destino(String name, Float precio, String duration_time, Category category, String description, Set<Language> languages, String address, Float punctuation, String city, String imageUrl, List<String> secondaryImages) {
         this.name = name;
         this.precio = precio;
         this.duration_time = duration_time;
@@ -67,6 +73,7 @@ public class Destino {
         this.punctuation = punctuation;
         this.city = city;
         this.imageUrl = imageUrl;
+        this.secondaryImages = secondaryImages;
     }
 
     public Long getId() {
@@ -155,6 +162,14 @@ public class Destino {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public List<String> getSecondaryImages() {
+        return secondaryImages;
+    }
+
+    public void setSecondaryImages(List<String> secondaryImages) {
+        this.secondaryImages = secondaryImages;
     }
 
     public void setCity(String city) {

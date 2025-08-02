@@ -30,8 +30,12 @@ public class S3Service {
                 .build();
     }
 
-    public String uploadFile(MultipartFile file) {
-        String key = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+    public String uploadFile(MultipartFile file){
+        String key = System.currentTimeMillis() + "-" + file.getOriginalFilename();
+        return uploadFile(file, key);
+    }
+
+    public String uploadFile(MultipartFile file, String key) {
 
         try {
             s3.putObject(
