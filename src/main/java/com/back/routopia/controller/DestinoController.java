@@ -36,8 +36,8 @@ public class DestinoController {
 
     @Operation(summary = "Get all Destinos")
     @GetMapping
-    public ResponseEntity<List<DestinoDTO>> find_all_destino(@RequestParam(required = false) Category category){
-        List<Destino> destinos = destinoService.list_all(category);
+    public ResponseEntity<List<DestinoDTO>> find_all_destino(@RequestParam(required = false) Category category, @RequestParam(required = false) String q){
+        List<Destino> destinos = destinoService.list_all(category, q);
 
         List<DestinoDTO> response_list = destinos.stream()
                 .map(destino -> new DestinoDTO(

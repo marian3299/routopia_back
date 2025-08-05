@@ -20,8 +20,13 @@ public class DestinoService {
         return destinoRespository.save(destino);
     }
 
-    public List<Destino> list_all(Category category) {
+    public List<Destino> list_all(Category category, String searchTerm) {
         Specification<Destino> spec = Specification.where(DestinoSpecification.hasCategory(category));
+
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            spec = spec.and(DestinoSpecification.searchByNameAndCity(searchTerm));
+        }
+
         return destinoRespository.findAll(spec);
     }
 

@@ -10,4 +10,19 @@ public class DestinoSpecification {
                     category == null ? null : criteriaBuilder.equal(root.get("category"), category));
 
     }
+
+    public static Specification<Destino> searchByNameAndCity(String searchTerm) {
+        return (root, query, criteriaBuilder) -> {
+            if (searchTerm == null || searchTerm.trim().isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+
+            String likePattern = "%" + searchTerm.toLowerCase() + "%";
+
+            return criteriaBuilder.or(
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("city")), likePattern)
+            );
+        };
+    }
 }
