@@ -5,6 +5,9 @@ import com.back.routopia.entity.Destino;
 import com.back.routopia.repositroy.DestinoRespository;
 import com.back.routopia.specification.DestinoSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +33,15 @@ public class DestinoService {
         }
 
         return destinoRespository.findAll(spec);
+    }
+
+    public Page<Destino> list_all(Category category, String searchTerm, int page, int size) {
+        Specification<Destino> spec = Specification.where(DestinoSpecification.hasCategory(category));
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            spec = spec.and(DestinoSpecification.searchByNameAndCity(searchTerm));
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        return destinoRespository.findAll(spec, pageable);
     }
 
     public Optional<Destino> find_by_id(Long id) { return destinoRespository.findById(id); }

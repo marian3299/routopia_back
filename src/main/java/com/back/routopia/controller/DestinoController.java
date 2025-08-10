@@ -36,29 +36,32 @@ public class DestinoController {
 
     @Operation(summary = "Get all Destinos")
     @GetMapping
-    public ResponseEntity<List<DestinoDTO>> find_all_destino(@RequestParam(required = false) Category category, @RequestParam(required = false) String q){
-        List<Destino> destinos = destinoService.list_all(category, q);
+    public ResponseEntity<org.springframework.data.domain.Page<DestinoDTO>> find_all_destino(
+            @RequestParam(required = false) Category category,
+            @RequestParam(required = false) String q,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        org.springframework.data.domain.Page<Destino> destinosPage = destinoService.list_all(category, q, page, size);
 
-        List<DestinoDTO> response_list = destinos.stream()
-                .map(destino -> new DestinoDTO(
-                        destino.getName(),
-                        destino.getId(),
-                        destino.getCategory().name(),
-                        destino.getCity(),
-                        destino.getPrecio(),
-                        destino.getDuration_time(),
-                        destino.getDescription(),
-                        destino.getAddress(),
-                        destino.getLanguages().stream()
-                                .map(Language::name)
-                                .collect(Collectors.toSet()),
-                        destino.getPunctuation(),
-                        destino.getImageUrl(),
-                        destino.getSecondaryImages()
-                ))
-                .toList();
+        org.springframework.data.domain.Page<DestinoDTO> responsePage = destinosPage.map(destino -> new DestinoDTO(
+                destino.getName(),
+                destino.getId(),
+                destino.getCategory().name(),
+                destino.getCity(),
+                destino.getPrecio(),
+                destino.getDuration_time(),
+                destino.getDescription(),
+                destino.getAddress(),
+                destino.getLanguages().stream()
+                        .map(Language::name)
+                        .collect(java.util.stream.Collectors.toSet()),
+                destino.getPunctuation(),
+                destino.getImageUrl(),
+                destino.getSecondaryImages()
+        ));
 
-        return ResponseEntity.ok(response_list);
+        return ResponseEntity.ok(responsePage);
     }
 
     @Operation(summary = "Get Destino by id")
@@ -76,7 +79,7 @@ public class DestinoController {
                 destino.getDuration_time(),
                 destino.getDescription(),
                 destino.getAddress(),
-                destino.getLanguages().stream().map(Language::name).collect(Collectors.toSet()),
+                destino.getLanguages().stream().map(Language::name).collect(java.util.stream.Collectors.toSet()),
                 destino.getPunctuation(),
                 destino.getImageUrl(),
                 destino.getSecondaryImages()
@@ -113,9 +116,9 @@ public class DestinoController {
         destino.setPunctuation(score);
         destino.setCity(city);
 
-        Set<Language> languageSet = languages.stream()
-                .map(Language::valueOf)
-                .collect(Collectors.toSet());
+        Set<com.back.routopia.entity.Language> languageSet = languages.stream()
+                .map(com.back.routopia.entity.Language::valueOf)
+                .collect(java.util.stream.Collectors.toSet());
         destino.setLanguages(languageSet);
 
         Destino saved_destino = destinoService.create_destino(destino);
