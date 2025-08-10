@@ -16,6 +16,8 @@ public class DestinoService {
     @Autowired
     private DestinoRespository destinoRespository;
 
+    public boolean verify_name(String name) {return destinoRespository.existsByNameIgnoreCase(name);}
+
     public Destino create_destino(Destino destino){
         return destinoRespository.save(destino);
     }

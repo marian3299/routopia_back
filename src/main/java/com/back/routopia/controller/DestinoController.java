@@ -100,6 +100,9 @@ public class DestinoController {
             @RequestParam(value = "image", required = false) MultipartFile image,
             @RequestParam(value = "image_list", required = false) List<MultipartFile> imageList
     ){
+        if (destinoService.verify_name(name)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "El nombre del destino ya existe");
+        }
         Destino destino = new Destino();
         destino.setName(name);
         destino.setPrecio(price);
