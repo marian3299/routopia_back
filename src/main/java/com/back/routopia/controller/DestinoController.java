@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,29 +38,25 @@ public class DestinoController {
 
     @Operation(summary = "Get all Destinos")
     @GetMapping
-    public ResponseEntity<List<DestinoDTO>> find_all_destino(@RequestParam(required = false) Category category, @RequestParam(required = false) String q){
-        List<Destino> destinos = destinoService.list_all(category, q);
+    public ResponseEntity<Page<DestinoDTO>> find_all_destino(@RequestParam(required = false) Category category, @RequestParam(required = false) String q,  Pageable pageable){
+        Page<Destino> pageResult = destinoService.list_all(category, q, pageable);
 
-        List<DestinoDTO> response_list = destinos.stream()
-                .map(destino -> new DestinoDTO(
-                        destino.getName(),
-                        destino.getId(),
-                        destino.getCategory().name(),
-                        destino.getCity(),
-                        destino.getPrecio(),
-                        destino.getDuration_time(),
-                        destino.getDescription(),
-                        destino.getAddress(),
-                        destino.getLanguages().stream()
-                                .map(Language::name)
-                                .collect(Collectors.toSet()),
-                        destino.getPunctuation(),
-                        destino.getImageUrl(),
-                        destino.getSecondaryImages()
-                ))
-                .toList();
+        Page<DestinoDTO> responsePage = pageResult.map(destino -> new DestinoDTO(
+                destino.getName(),
+                destino.getId(),
+                destino.getCategory().name(),
+                destino.getCity(),
+                destino.getPrecio(),
+                destino.getDuration_time(),
+                destino.getDescription(),
+                destino.getAddress(),
+                destino.getLanguages().stream().map(Language::name).collect(Collectors.toSet()),
+                destino.getPunctuation(),
+                destino.getImageUrl(),
+                destino.getSecondaryImages()
+        ));
 
-        return ResponseEntity.ok(response_list);
+        return ResponseEntity.ok(responsePage);
     }
 
     @Operation(summary = "Get Destino by id")
