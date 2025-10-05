@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/destino")
+@RequestMapping("/api/destino")
 @CrossOrigin(origins = "*")
 @Tag(name = "Controller de Destinos", description = "CRUD de destinos")
 public class DestinoController {
