@@ -21,13 +21,18 @@ public class S3Service {
     @Value("${aws.s3.bucketName}")
     private String bucketName;
 
-    public S3Service(@Value("${aws.accessKey}") String accessKey,
-                     @Value("${aws.secretKey}") String secretKey,
+    public S3Service(@Value("${aws.accessKey:}") String accessKey,
+                     @Value("${aws.secretKey:}") String secretKey,
                      @Value("${aws.region}") String region) {
-        s3 = S3Client.builder()
-                .region(Region.of(region))
-                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
-                .build();
+        if (accessKey.isEmpty() || secretKey.isEmpty()) {
+            // En desarrollo, no inicializar S3Client
+            s3 = null;
+        } else {
+            s3 = S3Client.builder()
+                    .region(Region.of(region))
+                    .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
+                    .build();
+        }
     }
 
     public String uploadFile(MultipartFile file){
@@ -36,6 +41,10 @@ public class S3Service {
     }
 
     public String uploadFile(MultipartFile file, String key) {
+        if (s3 == null) {
+            // En desarrollo, retornar una URL simulada
+            return "https://example.com/placeholder/" + key;
+        }
 
         try {
             s3.putObject(
