@@ -144,15 +144,74 @@ public class DestinoController {
     }
 
     @Operation(summary = "Actualizar destino")
-    @PutMapping
-    public ResponseEntity<Destino> uptade_destino(@RequestBody Destino destino){
-        Optional<Destino> db_destino = destinoService.find_by_id(destino.getId());
-
-        if(db_destino.isPresent()){
-            return ResponseEntity.ok((destinoService.update_destino(destino)));
+    @PutMapping("/{id}")
+    public ResponseEntity<Destino> uptade_destino(
+            @PathVariable("id") Long id,
+            @RequestParam("name") String name,
+            @RequestParam("price") Float price,
+            @RequestParam("duration") String duration,
+            @RequestParam("description") String description,
+            @RequestParam("languages") List<String> languages,
+            @RequestParam("location") String location,
+            @RequestParam("category") String category,
+            @RequestParam("score") Float score,
+            @RequestParam("city") String city,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            @RequestParam(value = "image_list", required = false) List<MultipartFile> imageList
+    ){
+        Optional<Destino> db_destino = destinoService.find_by_id(id);
+        
+        if(!db_destino.isPresent()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Destino no encontrado");
         }
 
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Datos incorrectos para destino");
+        // Verificar si el nombre ya existe en otro destino (excluyendo el actual)
+        if (destinoService.verify_name(name) && !db_destino.get().getName().equalsIgnoreCase(name)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "El nombre del destino ya existe");
+        }
+
+        Destino destino = db_destino.get();
+        
+        // Actualizar los campos del destino
+        destino.setName(name);
+        destino.setPrecio(price);
+        destino.setDuration_time(duration);
+        destino.setDescription(description);
+        destino.setAddress(location);
+        destino.setCategory(Category.valueOf(category));
+        destino.setPunctuation(score);
+        destino.setCity(city);
+
+        Set<Language> languageSet = languages.stream()
+                .map(Language::valueOf)
+                .collect(Collectors.toSet());
+        destino.setLanguages(languageSet);
+
+        // Manejar imagen principal
+        if (image != null && !image.isEmpty()) {
+            String key = "main-images/" + destino.getId() + "/" + image.getOriginalFilename();
+            String imageUrl = s3Service.uploadFile(image, key);
+            destino.setImageUrl(imageUrl);
+        }
+
+        // Manejar imágenes secundarias
+        if (imageList != null && !imageList.isEmpty()) {
+            List<String> secondaryUrls = new ArrayList<>();
+
+            for (MultipartFile secondaryImage : imageList) {
+                if (!secondaryImage.isEmpty()) {
+                    String key = "imagenes-secundarias/" + destino.getId() + "/" + secondaryImage.getOriginalFilename();
+                    String url = s3Service.uploadFile(secondaryImage, key);
+                    secondaryUrls.add(url);
+                }
+            }
+
+            // Actualizar las URLs de imágenes secundarias
+            destino.setSecondaryImages(secondaryUrls);
+        }
+
+        Destino updated_destino = destinoService.update_destino(destino);
+        return ResponseEntity.ok(updated_destino);
     }
 
     @DeleteMapping("/{id}")
