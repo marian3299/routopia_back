@@ -197,17 +197,26 @@ public class DestinoController {
         // Manejar imágenes secundarias
         if (imageList != null && !imageList.isEmpty()) {
             List<String> secondaryUrls = new ArrayList<>();
+            List<String> existingSecondaryImages = destino.getSecondaryImages();
 
+            if (existingSecondaryImages == null) {
+                existingSecondaryImages = new ArrayList<>();
+            } else {
+                // Crear una nueva lista para evitar modificar la original directamente
+                existingSecondaryImages = new ArrayList<>(existingSecondaryImages);
+            }
+
+            // Agregar las nuevas imágenes
             for (MultipartFile secondaryImage : imageList) {
                 if (!secondaryImage.isEmpty()) {
                     String key = "imagenes-secundarias/" + destino.getId() + "/" + secondaryImage.getOriginalFilename();
                     String url = s3Service.uploadFile(secondaryImage, key);
-                    secondaryUrls.add(url);
+                    existingSecondaryImages.add(url); // AGREGAR en lugar de reemplazar
                 }
             }
 
-            // Actualizar las URLs de imágenes secundarias
-            destino.setSecondaryImages(secondaryUrls);
+            // Actualizar con la lista combinada (existentes + nuevas)
+            destino.setSecondaryImages(existingSecondaryImages);
         }
 
         Destino updated_destino = destinoService.update_destino(destino);
