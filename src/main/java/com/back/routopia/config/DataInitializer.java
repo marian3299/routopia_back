@@ -28,30 +28,32 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Crear usuario administrador por defecto si no existe
-        if (!userRepository.existsByUsername("admin")) {
+        if (!userRepository.existsByEmail("admin@routopia.com")) {
             User admin = new User();
-            admin.setUsername("admin");
+            admin.setNombre("Admin");
+            admin.setApellido("Routopia");
             admin.setEmail("admin@routopia.com");
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setRole(Role.ADMIN);
             userRepository.save(admin);
 
             System.out.println("Admin user created:");
-            System.out.println("Username: admin");
+            System.out.println("Email: admin@routopia.com");
             System.out.println("Password: admin123");
         }
 
         // Crear usuario normal de ejemplo si no existe
-        if (!userRepository.existsByUsername("user")) {
+        if (!userRepository.existsByEmail("user@routopia.com")) {
             User user = new User();
-            user.setUsername("user");
+            user.setNombre("Usuario");
+            user.setApellido("Demo");
             user.setEmail("user@routopia.com");
             user.setPassword(passwordEncoder.encode("user123"));
             user.setRole(Role.USER);
             userRepository.save(user);
 
             System.out.println("Normal user created:");
-            System.out.println("Username: user");
+            System.out.println("Email: user@routopia.com");
             System.out.println("Password: user123");
         }
 

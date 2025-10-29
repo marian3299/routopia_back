@@ -4,7 +4,8 @@ import java.time.LocalDateTime;
 
 public class UserDTO {
     private Long id;
-    private String username;
+    private String nombre;
+    private String apellido;
     private String email;
     private Role role;
     private LocalDateTime createdAt;
@@ -14,10 +15,11 @@ public class UserDTO {
     // Constructors
     public UserDTO() {}
 
-    public UserDTO(Long id, String username, String email, Role role,
+    public UserDTO(Long id, String nombre, String apellido, String email, Role role,
                    LocalDateTime createdAt, LocalDateTime lastLogin, Boolean isActive) {
         this.id = id;
-        this.username = username;
+        this.nombre = nombre;
+        this.apellido = apellido;
         this.email = email;
         this.role = role;
         this.createdAt = createdAt;
@@ -29,8 +31,11 @@ public class UserDTO {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public String getApellido() { return apellido; }
+    public void setApellido(String apellido) { this.apellido = apellido; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }

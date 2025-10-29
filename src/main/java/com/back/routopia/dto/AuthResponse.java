@@ -5,13 +5,15 @@ import com.back.routopia.entity.Role;
 public class AuthResponse {
     private String token;
     private String type = "Bearer";
-    private String username;
+    private String nombre;
+    private String apellido;
     private String email;
     private Role role;
 
-    public AuthResponse(String token, String username, String email, Role role) {
+    public AuthResponse(String token, String nombre, String apellido, String email, Role role) {
         this.token = token;
-        this.username = username;
+        this.nombre = nombre;
+        this.apellido = apellido;
         this.email = email;
         this.role = role;
     }
@@ -23,8 +25,11 @@ public class AuthResponse {
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public String getApellido() { return apellido; }
+    public void setApellido(String apellido) { this.apellido = apellido; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }

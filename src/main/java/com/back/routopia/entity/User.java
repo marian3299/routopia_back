@@ -19,10 +19,15 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
-    private String username;
+    @Column(nullable = false)
+    @NotBlank(message = "Nombre is required")
+    @Size(min = 2, max = 50, message = "Nombre must be between 2 and 50 characters")
+    private String nombre;
+
+    @Column(nullable = false)
+    @NotBlank(message = "Apellido is required")
+    @Size(min = 2, max = 50, message = "Apellido must be between 2 and 50 characters")
+    private String apellido;
 
     @Column(unique = true, nullable = false)
     @Email(message = "Email should be valid")
@@ -51,9 +56,10 @@ public class User implements UserDetails {
         this.createdAt = LocalDateTime.now();
     }
 
-    public User(String username, String email, String password, Role role) {
+    public User(String nombre, String apellido, String email, String password, Role role) {
         this();
-        this.username = username;
+        this.nombre = nombre;
+        this.apellido = apellido;
         this.email = email;
         this.password = password;
         this.role = role;
@@ -63,6 +69,11 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email; // Usar email como username para Spring Security
     }
 
     @Override
@@ -89,8 +100,11 @@ public class User implements UserDetails {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public String getApellido() { return apellido; }
+    public void setApellido(String apellido) { this.apellido = apellido; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
