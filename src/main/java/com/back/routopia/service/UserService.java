@@ -25,21 +25,19 @@ public class UserService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
     }
 
     public User registerUser(RegisterRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already exists");
-        }
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
 
         User user = new User();
-        user.setUsername(request.getUsername());
+        user.setNombre(request.getNombre());
+        user.setApellido(request.getApellido());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.USER);
@@ -47,8 +45,8 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public void updateLastLogin(String username) {
-        userRepository.findByUsername(username).ifPresent(user -> {
+    public void updateLastLogin(String email) {
+        userRepository.findByEmail(email).ifPresent(user -> {
             user.setLastLogin(LocalDateTime.now());
             userRepository.save(user);
         });
@@ -95,7 +93,8 @@ public class UserService implements UserDetailsService {
     private UserDTO convertToDto(User user) {
         return new UserDTO(
                 user.getId(),
-                user.getUsername(),
+                user.getNombre(),
+                user.getApellido(),
                 user.getEmail(),
                 user.getRole(),
                 user.getCreatedAt(),

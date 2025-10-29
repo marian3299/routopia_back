@@ -40,7 +40,8 @@ public class AuthController {
 
             AuthResponse response = new AuthResponse(
                     token,
-                    user.getUsername(),
+                    user.getNombre(),
+                    user.getApellido(),
                     user.getEmail(),
                     user.getRole()
             );
@@ -57,18 +58,19 @@ public class AuthController {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
+                            request.getEmail(),
                             request.getPassword()
                     )
             );
 
             User user = (User) authentication.getPrincipal();
-            userService.updateLastLogin(user.getUsername());
+            userService.updateLastLogin(user.getEmail());
             String token = jwtService.generateToken(user);
 
             AuthResponse response = new AuthResponse(
                     token,
-                    user.getUsername(),
+                    user.getNombre(),
+                    user.getApellido(),
                     user.getEmail(),
                     user.getRole()
             );
@@ -86,7 +88,8 @@ public class AuthController {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(new AuthResponse(
                     null, // No enviamos el token de nuevo
-                    user.getUsername(),
+                    user.getNombre(),
+                    user.getApellido(),
                     user.getEmail(),
                     user.getRole()
             ));
