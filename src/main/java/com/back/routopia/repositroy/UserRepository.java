@@ -20,4 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT COUNT(u) FROM User u WHERE u.role = :role")
     long countByRole(Role role);
+
+    @Query("SELECT u FROM User u WHERE u.role != :role")
+    List<User> findAllExceptRole(Role role);
 }

@@ -90,6 +90,12 @@ public class UserService implements UserDetailsService {
         return userRepository.countByRole(Role.ADMIN);
     }
 
+    public List<UserDTO> getAllUsersExceptAdmin() {
+        return userRepository.findAllExceptRole(Role.ADMIN).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     private UserDTO convertToDto(User user) {
         return new UserDTO(
                 user.getId(),
