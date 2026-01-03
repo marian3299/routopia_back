@@ -1,5 +1,6 @@
 package com.back.routopia.service;
 
+import com.back.routopia.dto.PermissionsRequest;
 import com.back.routopia.dto.RegisterRequest;
 import com.back.routopia.dto.UserDTO;
 import com.back.routopia.entity.Role;
@@ -11,8 +12,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,8 +99,19 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public UserDTO assignPermissions(Long userId, PermissionsRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Asignar directamente la lista de permisos como strings
+        user.setPermissions(new ArrayList<>(request.getPermissions()));
+        User savedUser = userRepository.save(user);
+        return convertToDto(savedUser);
+    }
+
     private UserDTO convertToDto(User user) {
-        return new UserDTO(
+        UserDTO dto = new UserDTO(
                 user.getId(),
                 user.getNombre(),
                 user.getApellido(),
@@ -107,5 +121,7 @@ public class UserService implements UserDetailsService {
                 user.getLastLogin(),
                 user.getIsActive()
         );
+        dto.setPermissions(user.getPermissions());
+        return dto;
     }
 }

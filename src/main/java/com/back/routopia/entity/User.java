@@ -1,5 +1,6 @@
 package com.back.routopia.entity;
 
+import com.back.routopia.converter.StringListConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -51,6 +53,10 @@ public class User implements UserDetails {
 
     @Column(name = "is_active")
     private Boolean isActive = true;
+
+    @Column(name = "permissions", columnDefinition = "TEXT")
+    @Convert(converter = StringListConverter.class)
+    private List<String> permissions = new ArrayList<>();
 
     public User() {
         this.createdAt = LocalDateTime.now();
@@ -123,5 +129,8 @@ public class User implements UserDetails {
 
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public List<String> getPermissions() { return permissions; }
+    public void setPermissions(List<String> permissions) { this.permissions = permissions; }
 
 }

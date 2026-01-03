@@ -1,6 +1,7 @@
 package com.back.routopia.dto;
 import com.back.routopia.entity.Role;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class UserDTO {
     private Long id;
@@ -11,6 +12,7 @@ public class UserDTO {
     private LocalDateTime createdAt;
     private LocalDateTime lastLogin;
     private Boolean isActive;
+    private List<String> permissions;
 
     // Constructors
     public UserDTO() {}
@@ -25,6 +27,20 @@ public class UserDTO {
         this.createdAt = createdAt;
         this.lastLogin = lastLogin;
         this.isActive = isActive;
+    }
+
+    public UserDTO(Long id, String nombre, String apellido, String email, Role role,
+                   LocalDateTime createdAt, LocalDateTime lastLogin, Boolean isActive,
+                   List<String> permissions) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.role = role;
+        this.createdAt = createdAt;
+        this.lastLogin = lastLogin;
+        this.isActive = isActive;
+        this.permissions = permissions;
     }
 
     // Getters and Setters
@@ -51,4 +67,7 @@ public class UserDTO {
 
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public List<String> getPermissions() { return permissions; }
+    public void setPermissions(List<String> permissions) { this.permissions = permissions; }
 }
