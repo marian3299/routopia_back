@@ -43,7 +43,8 @@ public class AuthController {
                     user.getNombre(),
                     user.getApellido(),
                     user.getEmail(),
-                    user.getRole()
+                    user.getRole(),
+                    user.getPermissions()
             );
 
             return ResponseEntity.ok(response);
@@ -72,7 +73,8 @@ public class AuthController {
                     user.getNombre(),
                     user.getApellido(),
                     user.getEmail(),
-                    user.getRole()
+                    user.getRole(),
+                    user.getPermissions()
             );
 
             return ResponseEntity.ok(response);
@@ -91,7 +93,8 @@ public class AuthController {
                     user.getNombre(),
                     user.getApellido(),
                     user.getEmail(),
-                    user.getRole()
+                    user.getRole(),
+                    user.getPermissions()
             ));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

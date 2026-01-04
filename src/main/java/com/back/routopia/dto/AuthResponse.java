@@ -1,6 +1,7 @@
 package com.back.routopia.dto;
 
 import com.back.routopia.entity.Role;
+import java.util.List;
 
 public class AuthResponse {
     private String token;
@@ -9,13 +10,15 @@ public class AuthResponse {
     private String apellido;
     private String email;
     private Role role;
+    private List<String> permissions;
 
-    public AuthResponse(String token, String nombre, String apellido, String email, Role role) {
+    public AuthResponse(String token, String nombre, String apellido, String email, Role role, List<String> permissions) {
         this.token = token;
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.role = role;
+        this.permissions = permissions;
     }
 
     // Getters and Setters
@@ -36,4 +39,7 @@ public class AuthResponse {
 
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
+
+    public List<String> getPermissions() { return permissions; }
+    public void setPermissions(List<String> permissions) { this.permissions = permissions; }
 }
