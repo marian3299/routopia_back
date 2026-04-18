@@ -1,6 +1,10 @@
 package com.back.routopia.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "traits")
@@ -14,6 +18,10 @@ public class Trait {
 
     @Column(name = "image_url")
     private String imageUrl;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "traits", fetch = FetchType.LAZY)
+    private Set<Destino> destinos = new HashSet<>();
 
     public Trait() {
     }
@@ -45,5 +53,13 @@ public class Trait {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Set<Destino> getDestinos() {
+        return destinos;
+    }
+
+    public void setDestinos(Set<Destino> destinos) {
+        this.destinos = destinos != null ? destinos : new HashSet<>();
     }
 }

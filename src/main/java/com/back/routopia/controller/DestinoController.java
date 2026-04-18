@@ -53,7 +53,8 @@ public class DestinoController {
                 destino.getLanguages().stream().map(Language::name).collect(Collectors.toSet()),
                 destino.getPunctuation(),
                 destino.getImageUrl(),
-                destino.getSecondaryImages()
+                destino.getSecondaryImages(),
+                DestinoDTO.traitsFromEntity(destino.getTraits())
         ));
 
         return ResponseEntity.ok(responsePage);
@@ -77,7 +78,8 @@ public class DestinoController {
                 destino.getLanguages().stream().map(Language::name).collect(Collectors.toSet()),
                 destino.getPunctuation(),
                 destino.getImageUrl(),
-                destino.getSecondaryImages()
+                destino.getSecondaryImages(),
+                DestinoDTO.traitsFromEntity(destino.getTraits())
         );
 
         return ResponseEntity.ok(destinoDTO);
@@ -96,7 +98,8 @@ public class DestinoController {
             @RequestParam("score") Float score,
             @RequestParam("city") String city,
             @RequestParam(value = "image", required = false) MultipartFile image,
-            @RequestParam(value = "image_list", required = false) List<MultipartFile> imageList
+            @RequestParam(value = "image_list", required = false) List<MultipartFile> imageList,
+            @RequestParam(value = "traits", required = false) List<Long> traitIds
     ){
         if (destinoService.verify_name(name)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "El nombre del destino ya existe");
@@ -138,6 +141,8 @@ public class DestinoController {
             saved_destino.setSecondaryImages(secondaryUrls); // Este campo debe existir
         }
 
+        destinoService.assignTraitsToDestino(saved_destino, traitIds);
+
         saved_destino = destinoService.create_destino(saved_destino);
 
         return ResponseEntity.ok(saved_destino);
@@ -157,7 +162,8 @@ public class DestinoController {
             @RequestParam("score") Float score,
             @RequestParam("city") String city,
             @RequestParam(value = "image", required = false) MultipartFile image,
-            @RequestParam(value = "image_list", required = false) List<MultipartFile> imageList
+            @RequestParam(value = "image_list", required = false) List<MultipartFile> imageList,
+            @RequestParam(value = "traits", required = false) List<Long> traitIds
     ){
         Optional<Destino> db_destino = destinoService.find_by_id(id);
         
@@ -218,6 +224,8 @@ public class DestinoController {
             // Actualizar con la lista combinada (existentes + nuevas)
             destino.setSecondaryImages(existingSecondaryImages);
         }
+
+        destinoService.assignTraitsToDestino(destino, traitIds);
 
         Destino updated_destino = destinoService.update_destino(destino);
         return ResponseEntity.ok(updated_destino);

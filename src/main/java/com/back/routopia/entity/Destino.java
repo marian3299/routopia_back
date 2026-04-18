@@ -3,6 +3,7 @@ package com.back.routopia.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -42,6 +43,17 @@ public class Destino {
     @Enumerated(EnumType.STRING)
     @Column(name = "language")
     private Set<Language> languages;
+
+    /**
+     * Características (traits) asociadas a este destino (catálogo compartido).
+     */
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "destino_traits",
+            joinColumns = @JoinColumn(name = "destino_id"),
+            inverseJoinColumns = @JoinColumn(name = "trait_id")
+    )
+    private Set<Trait> traits = new HashSet<>();
 
     public Destino() {
 
@@ -174,5 +186,13 @@ public class Destino {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public Set<Trait> getTraits() {
+        return traits;
+    }
+
+    public void setTraits(Set<Trait> traits) {
+        this.traits = traits != null ? traits : new HashSet<>();
     }
 }

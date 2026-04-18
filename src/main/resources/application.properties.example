@@ -1,3 +1,6 @@
+# Copia este archivo a application.properties y completa tus valores locales.
+# application.properties no se sube a Git (está en .gitignore).
+
 spring.h2.console.enabled=true
 spring.datasource.driverClassName=org.h2.Driver
 spring.datasource.url=jdbc:h2:file:./data/routopia
@@ -13,9 +16,12 @@ spring.servlet.multipart.enabled=true
 spring.servlet.multipart.max-file-size=10MB
 spring.servlet.multipart.max-request-size=10MB
 
+# Credenciales AWS (no commitear la clave real)
+aws.accessKey=TU_AWS_ACCESS_KEY_ID
+aws.secretKey=TU_AWS_SECRET_ACCESS_KEY
 aws.region=us-east-1
 aws.s3.bucketName=routopia-imagenes
 
-jwt.secret=myVerySecretKeyForJWTTokenGenerationThatShouldBeLongEnough
+# Secreto JWT: usa una cadena larga y aleatoria en producción
+jwt.secret=CAMBIA_ESTO_POR_UN_SECRETO_LARGO_Y_ALEATORIO
 jwt.expiration=86400000
-

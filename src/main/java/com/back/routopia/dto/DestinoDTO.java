@@ -1,7 +1,11 @@
 package com.back.routopia.dto;
 
+import com.back.routopia.entity.Trait;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DestinoDTO {
     private Long id;
@@ -17,8 +21,9 @@ public class DestinoDTO {
     private Float punctuation;
     private String imageUrl;
     private List<String> secondaryImages;
+    private List<TraitDTO> traits;
 
-    public DestinoDTO(String name, Long id, String category, String city, Float precio, String duration_time, String description, String address, Set<String> languages, Float punctuation, String imageUrl, List<String> secondaryImages) {
+    public DestinoDTO(String name, Long id, String category, String city, Float precio, String duration_time, String description, String address, Set<String> languages, Float punctuation, String imageUrl, List<String> secondaryImages, List<TraitDTO> traits) {
         this.name = name;
         this.id = id;
         this.category = category;
@@ -32,6 +37,7 @@ public class DestinoDTO {
         this.punctuation = punctuation;
         this.imageUrl = imageUrl;
         this.secondaryImages = secondaryImages;
+        this.traits = traits != null ? traits : Collections.emptyList();
     }
 
     private String category_to_country(String category){
@@ -95,5 +101,23 @@ public class DestinoDTO {
 
     public List<String> getSecondaryImages() {
         return secondaryImages;
+    }
+
+    public List<TraitDTO> getTraits() {
+        return traits;
+    }
+
+    public void setTraits(List<TraitDTO> traits) {
+        this.traits = traits;
+    }
+
+    /** Mapea entidades Trait a DTOs para respuestas API. */
+    public static List<TraitDTO> traitsFromEntity(Set<Trait> traitSet) {
+        if (traitSet == null || traitSet.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return traitSet.stream()
+                .map(t -> new TraitDTO(t.getId(), t.getName(), t.getImageUrl()))
+                .collect(Collectors.toList());
     }
 }
