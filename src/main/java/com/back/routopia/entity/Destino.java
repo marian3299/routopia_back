@@ -3,6 +3,10 @@ package com.back.routopia.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Entity
 @Table(name = "destinos")
 @Schema(description = "Entity que representa a un destino")
@@ -18,41 +22,70 @@ public class Destino {
     private Float precio;
     @Column
     private String duration_time;
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String description;
     @Enumerated(EnumType.STRING)
     private Category category;
-    @Enumerated(EnumType.STRING)
-    private Language language;
     @Column
     private String address;
-    @Column Float punctuation;
+    @Column
+    private Float punctuation;
+    @Column
+    private String city;
+    @Column(name = "image_url")
+    private String imageUrl;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "destino_secondary_images", joinColumns = @JoinColumn(name = "destino_id"))
+    @Column(name = "image_url")
+    private List<String> secondaryImages;
+    @ElementCollection(targetClass = Language.class)
+    @CollectionTable(name = "destino_languages", joinColumns = @JoinColumn(name = "destino_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "language")
+    private Set<Language> languages;
+
+    /**
+     * Características (traits) asociadas a este destino (catálogo compartido).
+     */
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "destino_traits",
+            joinColumns = @JoinColumn(name = "destino_id"),
+            inverseJoinColumns = @JoinColumn(name = "trait_id")
+    )
+    private Set<Trait> traits = new HashSet<>();
 
     public Destino() {
 
     }
 
-    public Destino(Long id, String name, Float precio, String duration_time, String description, Category category, Language language, String address, Float punctuation) {
+    public Destino(Long id, String name, Float precio, String duration_time, String description, Category category, Set<Language> languages, String address, Float punctuation, String city, String imageUrl, List<String> secondaryImages) {
         this.id = id;
         this.name = name;
         this.precio = precio;
         this.duration_time = duration_time;
         this.description = description;
         this.category = category;
-        this.language = language;
+        this.languages = languages;
         this.address = address;
         this.punctuation = punctuation;
+        this.city = city;
+        this.imageUrl = imageUrl;
+        this.secondaryImages = secondaryImages;
     }
 
-    public Destino(String name, Float precio, String duration_time, Category category, String description, Language language, String address, Float punctuation) {
+    public Destino(String name, Float precio, String duration_time, Category category, String description, Set<Language> languages, String address, Float punctuation, String city, String imageUrl, List<String> secondaryImages) {
         this.name = name;
         this.precio = precio;
         this.duration_time = duration_time;
         this.category = category;
         this.description = description;
-        this.language = language;
+        this.languages = languages;
         this.address = address;
         this.punctuation = punctuation;
+        this.city = city;
+        this.imageUrl = imageUrl;
+        this.secondaryImages = secondaryImages;
     }
 
     public Long getId() {
@@ -103,12 +136,12 @@ public class Destino {
         this.category = category;
     }
 
-    public Language getLanguage() {
-        return language;
+    public Set<Language> getLanguages() {
+        return languages;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
+    public void setLanguages(Set<Language> languages) {
+        this.languages = languages;
     }
 
     public String getAddress() {
@@ -125,5 +158,41 @@ public class Destino {
 
     public void setPunctuation(Float punctuation) {
         this.punctuation = punctuation;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCtiy(String ctiy) {
+        this.city = ctiy;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public List<String> getSecondaryImages() {
+        return secondaryImages;
+    }
+
+    public void setSecondaryImages(List<String> secondaryImages) {
+        this.secondaryImages = secondaryImages;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public Set<Trait> getTraits() {
+        return traits;
+    }
+
+    public void setTraits(Set<Trait> traits) {
+        this.traits = traits != null ? traits : new HashSet<>();
     }
 }

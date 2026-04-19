@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Configuración local (secretos AWS, JWT, etc.) — usar application.properties.example como plantilla
+src/main/resources/application.properties
+
+# Base de datos H2 y archivos locales en ./data (ruta del jdbc:h2:file:./data/routopia)
+data/
