@@ -21,10 +21,13 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script_stop: true
+          command_timeout: 40m
           script: |
-            set -e
+            set -euo pipefail
+            export GIT_TERMINAL_PROMPT=0
 
             cd "${{ secrets.EC2_APP_DIR }}"
+            echo "Deploy path: $(pwd)"
 
             # Si quedó un Dockerfile local sin trackear de un deploy anterior,
             # impide el checkout de main cuando ahora Dockerfile ya está en el repo.
@@ -32,13 +35,16 @@ jobs:
               rm -f Dockerfile
             fi
 
+            echo "Syncing repository..."
             git fetch origin main
             git checkout main
             git pull --ff-only origin main
 
+            echo "Building jar..."
             chmod +x mvnw
-            ./mvnw clean package -DskipTests
+            ./mvnw -B clean package -DskipTests
 
+            echo "Replacing container..."
             docker stop routopia_back_app || true
             docker rm routopia_back_app || true
 
@@ -56,3 +62,6 @@ jobs:
               -e JWT_SECRET='${{ secrets.JWT_SECRET }}' \
               -e JWT_EXPIRATION='${{ secrets.JWT_EXPIRATION }}' \
               routopia_back:latest
+
+            echo "Container status:"
+            docker ps --filter name=routopia_back_app
