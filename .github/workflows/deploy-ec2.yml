@@ -26,6 +26,12 @@ jobs:
 
             cd "${{ secrets.EC2_APP_DIR }}"
 
+            # Si quedó un Dockerfile local sin trackear de un deploy anterior,
+            # impide el checkout de main cuando ahora Dockerfile ya está en el repo.
+            if [ -f Dockerfile ] && ! git ls-files --error-unmatch Dockerfile >/dev/null 2>&1; then
+              rm -f Dockerfile
+            fi
+
             git fetch origin main
             git checkout main
             git pull --ff-only origin main
