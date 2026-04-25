@@ -14,6 +14,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: SSH connectivity check
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script_stop: true
+          command_timeout: 2m
+          request_pty: true
+          debug: true
+          script: |
+            set -e
+            echo "SSH OK"
+            whoami
+            hostname
+            pwd
+
       - name: Deploy on EC2 via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -22,6 +39,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script_stop: true
           command_timeout: 40m
+          request_pty: true
+          debug: true
           script: |
             set -euo pipefail
             export GIT_TERMINAL_PROMPT=0
