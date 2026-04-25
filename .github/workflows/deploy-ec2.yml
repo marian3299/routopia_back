@@ -25,16 +25,15 @@ jobs:
           fi
           echo "Testing TCP connectivity to ${{ secrets.EC2_HOST }}:22"
           nc -vz -w 10 "${{ secrets.EC2_HOST }}" 22
-          ssh-keyscan -T 20 -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
 
       - name: SSH connectivity check
         run: |
-          ssh -o BatchMode=yes -o ConnectTimeout=20 "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" \
+          ssh -o BatchMode=yes -o ConnectTimeout=20 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" \
             "echo 'SSH OK'; whoami; hostname; pwd"
 
       - name: Deploy on EC2
         run: |
-          ssh -o BatchMode=yes -o ConnectTimeout=20 "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" "bash -s" <<EOF
+          ssh -o BatchMode=yes -o ConnectTimeout=20 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" "bash -s" <<EOF
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
 
