@@ -14,73 +14,61 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Configure SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -T 20 -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
+
       - name: SSH connectivity check
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script_stop: true
-          command_timeout: 2m
-          request_pty: true
-          debug: true
-          script: |
-            set -e
-            echo "SSH OK"
-            whoami
-            hostname
-            pwd
+        run: |
+          ssh -o BatchMode=yes -o ConnectTimeout=20 "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" \
+            "echo 'SSH OK'; whoami; hostname; pwd"
 
-      - name: Deploy on EC2 via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script_stop: true
-          command_timeout: 40m
-          request_pty: true
-          debug: true
-          script: |
-            set -euo pipefail
-            export GIT_TERMINAL_PROMPT=0
+      - name: Deploy on EC2
+        run: |
+          ssh -o BatchMode=yes -o ConnectTimeout=20 "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" "bash -s" <<EOF
+          set -euo pipefail
+          export GIT_TERMINAL_PROMPT=0
 
-            cd "${{ secrets.EC2_APP_DIR }}"
-            echo "Deploy path: $(pwd)"
+          cd "${{ secrets.EC2_APP_DIR }}"
+          echo "Deploy path: \$(pwd)"
 
-            # Si quedó un Dockerfile local sin trackear de un deploy anterior,
-            # impide el checkout de main cuando ahora Dockerfile ya está en el repo.
-            if [ -f Dockerfile ] && ! git ls-files --error-unmatch Dockerfile >/dev/null 2>&1; then
-              rm -f Dockerfile
-            fi
+          # Si quedó un Dockerfile local sin trackear de un deploy anterior,
+          # impide el checkout de main cuando ahora Dockerfile ya está en el repo.
+          if [ -f Dockerfile ] && ! git ls-files --error-unmatch Dockerfile >/dev/null 2>&1; then
+            rm -f Dockerfile
+          fi
 
-            echo "Syncing repository..."
-            git fetch origin main
-            git checkout main
-            git pull --ff-only origin main
+          echo "Syncing repository..."
+          git fetch origin main
+          git checkout main
+          git pull --ff-only origin main
 
-            echo "Building jar..."
-            chmod +x mvnw
-            ./mvnw -B clean package -DskipTests
+          echo "Building jar..."
+          chmod +x mvnw
+          ./mvnw -B clean package -DskipTests
 
-            echo "Replacing container..."
-            docker stop routopia_back_app || true
-            docker rm routopia_back_app || true
+          echo "Replacing container..."
+          docker stop routopia_back_app || true
+          docker rm routopia_back_app || true
 
-            docker build -t routopia_back:latest .
+          docker build -t routopia_back:latest .
 
-            docker run -d \
-              --name routopia_back_app \
-              --restart unless-stopped \
-              -p 8080:8080 \
-              -e SERVER_ADDRESS=0.0.0.0 \
-              -e AWS_ACCESSKEY='${{ secrets.AWS_ACCESSKEY }}' \
-              -e AWS_SECRETKEY='${{ secrets.AWS_SECRETKEY }}' \
-              -e AWS_REGION='${{ secrets.AWS_REGION }}' \
-              -e AWS_S3_BUCKETNAME='${{ secrets.AWS_S3_BUCKETNAME }}' \
-              -e JWT_SECRET='${{ secrets.JWT_SECRET }}' \
-              -e JWT_EXPIRATION='${{ secrets.JWT_EXPIRATION }}' \
-              routopia_back:latest
+          docker run -d \
+            --name routopia_back_app \
+            --restart unless-stopped \
+            -p 8080:8080 \
+            -e SERVER_ADDRESS=0.0.0.0 \
+            -e AWS_ACCESSKEY='${{ secrets.AWS_ACCESSKEY }}' \
+            -e AWS_SECRETKEY='${{ secrets.AWS_SECRETKEY }}' \
+            -e AWS_REGION='${{ secrets.AWS_REGION }}' \
+            -e AWS_S3_BUCKETNAME='${{ secrets.AWS_S3_BUCKETNAME }}' \
+            -e JWT_SECRET='${{ secrets.JWT_SECRET }}' \
+            -e JWT_EXPIRATION='${{ secrets.JWT_EXPIRATION }}' \
+            routopia_back:latest
 
-            echo "Container status:"
-            docker ps --filter name=routopia_back_app
+          echo "Container status:"
+          docker ps --filter name=routopia_back_app
+          EOF
