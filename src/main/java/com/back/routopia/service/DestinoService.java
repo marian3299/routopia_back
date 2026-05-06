@@ -52,8 +52,8 @@ public class DestinoService {
         return destinoRespository.save(destino);
     }
 
-    public Page<Destino> list_all(Category category, String searchTerm, Pageable pageable) {
-        Specification<Destino> spec = Specification.where(DestinoSpecification.hasCategory(category));
+    public Page<Destino> list_all(List<Category> categories, String searchTerm, Pageable pageable) {
+        Specification<Destino> spec = Specification.where(DestinoSpecification.hasCategoryIn(categories));
 
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
             spec = spec.and(DestinoSpecification.searchByNameAndCity(searchTerm));

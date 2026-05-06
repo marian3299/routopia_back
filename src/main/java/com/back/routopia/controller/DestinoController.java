@@ -38,7 +38,10 @@ public class DestinoController {
 
     @Operation(summary = "Get all Destinos")
     @GetMapping
-    public ResponseEntity<Page<DestinoDTO>> find_all_destino(@RequestParam(required = false) Category category, @RequestParam(required = false) String q,  Pageable pageable){
+    public ResponseEntity<Page<DestinoDTO>> find_all_destino(
+            @RequestParam(required = false) List<Category> category,
+            @RequestParam(required = false) String q,
+            Pageable pageable) {
         Page<Destino> pageResult = destinoService.list_all(category, q, pageable);
 
         Page<DestinoDTO> responsePage = pageResult.map(destino -> new DestinoDTO(
