@@ -1,6 +1,5 @@
 package com.back.routopia.service;
 
-import com.back.routopia.entity.Category;
 import com.back.routopia.entity.Destino;
 import com.back.routopia.entity.Trait;
 import com.back.routopia.repositroy.DestinoRespository;
@@ -52,8 +51,8 @@ public class DestinoService {
         return destinoRespository.save(destino);
     }
 
-    public Page<Destino> list_all(List<Category> categories, String searchTerm, Pageable pageable) {
-        Specification<Destino> spec = Specification.where(DestinoSpecification.hasCategoryIn(categories));
+    public Page<Destino> list_all(List<Long> categoryIds, String searchTerm, Pageable pageable) {
+        Specification<Destino> spec = Specification.where(DestinoSpecification.hasCategoryIn(categoryIds));
 
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
             spec = spec.and(DestinoSpecification.searchByNameAndCity(searchTerm));

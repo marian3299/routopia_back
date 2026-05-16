@@ -1,6 +1,7 @@
 package com.back.routopia.config;
 
 import com.back.routopia.entity.*;
+import com.back.routopia.repositroy.CategoryRepository;
 import com.back.routopia.repositroy.DestinoRespository;
 import com.back.routopia.repositroy.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private DestinoRespository destinoRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -60,6 +64,17 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void createSampleDestinos() {
+        Category france = getOrCreateCategory("Francia", "Destinos en Francia",
+                "https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=800&h=600&fit=crop");
+        Category japan = getOrCreateCategory("Japón", "Destinos en Japón",
+                "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&h=600&fit=crop");
+        Category greece = getOrCreateCategory("Grecia", "Destinos en Grecia",
+                "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=800&h=600&fit=crop");
+        Category thailand = getOrCreateCategory("Tailandia", "Destinos en Tailandia",
+                "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800&h=600&fit=crop");
+        Category mexico = getOrCreateCategory("México", "Destinos en México",
+                "https://images.unsplash.com/photo-1518638150340-f706e86654de?w=800&h=600&fit=crop");
+
         if (destinoRepository.count() == 0) {
             System.out.println("Creating sample destinations...");
 
@@ -70,7 +85,7 @@ public class DataInitializer implements CommandLineRunner {
                 destino1.setPrecio(25.0f);
                 destino1.setDuration_time("2-3 horas");
                 destino1.setDescription("La Torre Eiffel es una torre de hierro pudelado de 324 metros de altura situada en París. Construida en 1889, es el símbolo más reconocible de Francia y uno de los monumentos más visitados del mundo.");
-                destino1.setCategory(Category.FRANCE);
+                destino1.setCategory(france);
                 destino1.setAddress("Champ de Mars, 5 Avenue Anatole France, 75007 París, Francia");
                 destino1.setPunctuation(4.8f);
                 destino1.setCity("París");
@@ -90,7 +105,7 @@ public class DataInitializer implements CommandLineRunner {
                 destino2.setPrecio(17.0f);
                 destino2.setDuration_time("4-6 horas");
                 destino2.setDescription("El Museo del Louvre es el museo de arte más grande del mundo y un monumento histórico en París. Hogar de la Mona Lisa y miles de obras maestras de la humanidad.");
-                destino2.setCategory(Category.FRANCE);
+                destino2.setCategory(france);
                 destino2.setAddress("Rue de Rivoli, 75001 París, Francia");
                 destino2.setPunctuation(4.7f);
                 destino2.setCity("París");
@@ -110,7 +125,7 @@ public class DataInitializer implements CommandLineRunner {
                 destino3.setPrecio(0.0f);
                 destino3.setDuration_time("1-2 horas");
                 destino3.setDescription("El templo más antiguo de Tokio, fundado en el año 628. Un lugar sagrado dedicado a la diosa budista Kannon, rodeado de jardines tradicionales y mercados históricos.");
-                destino3.setCategory(Category.JAPAN);
+                destino3.setCategory(japan);
                 destino3.setAddress("2 Chome-3-1 Asakusa, Taito City, Tokio 111-0032, Japón");
                 destino3.setPunctuation(4.6f);
                 destino3.setCity("Tokio");
@@ -130,7 +145,7 @@ public class DataInitializer implements CommandLineRunner {
                 destino4.setPrecio(50.0f);
                 destino4.setDuration_time("1 día completo");
                 destino4.setDescription("El monte más alto de Japón con 3,776 metros. Un volcán activo y símbolo nacional, perfecto para senderismo y contemplar paisajes únicos. Patrimonio de la Humanidad por la UNESCO.");
-                destino4.setCategory(Category.JAPAN);
+                destino4.setCategory(japan);
                 destino4.setAddress("Kitayama, Fujinomiya, Shizuoka 418-0112, Japón");
                 destino4.setPunctuation(4.9f);
                 destino4.setCity("Fujinomiya");
@@ -150,7 +165,7 @@ public class DataInitializer implements CommandLineRunner {
                 destino5.setPrecio(20.0f);
                 destino5.setDuration_time("3-4 horas");
                 destino5.setDescription("Ciudadela antigua situada en una cima rocosa sobre Atenas. Hogar del Partenón y otros templos clásicos, representa la cuna de la democracia y la civilización occidental.");
-                destino5.setCategory(Category.GREECE);
+                destino5.setCategory(greece);
                 destino5.setAddress("Atenas 105 58, Grecia");
                 destino5.setPunctuation(4.5f);
                 destino5.setCity("Atenas");
@@ -170,7 +185,7 @@ public class DataInitializer implements CommandLineRunner {
                 destino6.setPrecio(80.0f);
                 destino6.setDuration_time("2-3 días");
                 destino6.setDescription("Isla volcánica en el mar Egeo famosa por sus puestas de sol espectaculares, arquitectura cicládica blanca y azul, y vinos únicos. Un paraíso romántico y fotogénico.");
-                destino6.setCategory(Category.GREECE);
+                destino6.setCategory(greece);
                 destino6.setAddress("Santorini, Grecia");
                 destino6.setPunctuation(4.8f);
                 destino6.setCity("Fira");
@@ -190,7 +205,7 @@ public class DataInitializer implements CommandLineRunner {
                 destino7.setPrecio(15.0f);
                 destino7.setDuration_time("2-3 horas");
                 destino7.setDescription("Complejo de edificios que ha sido la residencia oficial de los reyes de Tailandia desde 1782. Arquitectura tailandesa tradicional con templos dorados y jardines exuberantes.");
-                destino7.setCategory(Category.THAILAND);
+                destino7.setCategory(thailand);
                 destino7.setAddress("Phra Nakhon, Bangkok 10200, Tailandia");
                 destino7.setPunctuation(4.4f);
                 destino7.setCity("Bangkok");
@@ -210,7 +225,7 @@ public class DataInitializer implements CommandLineRunner {
                 destino8.setPrecio(45.0f);
                 destino8.setDuration_time("1 día completo");
                 destino8.setDescription("Archipiélago de seis islas en el mar de Andamán. Aguas cristalinas, playas de arena blanca, acantilados de piedra caliza y vida marina espectacular. Perfecto para snorkel y buceo.");
-                destino8.setCategory(Category.THAILAND);
+                destino8.setCategory(thailand);
                 destino8.setAddress("Islas Phi Phi, Krabi, Tailandia");
                 destino8.setPunctuation(4.7f);
                 destino8.setCity("Krabi");
@@ -230,7 +245,7 @@ public class DataInitializer implements CommandLineRunner {
                 destino9.setPrecio(30.0f);
                 destino9.setDuration_time("4-5 horas");
                 destino9.setDescription("Complejo arqueológico maya y una de las Nuevas Siete Maravillas del Mundo. La pirámide de Kukulcán es un testimonio de la avanzada astronomía y arquitectura maya.");
-                destino9.setCategory(Category.MEXICO);
+                destino9.setCategory(mexico);
                 destino9.setAddress("Yucatán, México");
                 destino9.setPunctuation(4.6f);
                 destino9.setCity("Chichen Itzá");
@@ -250,7 +265,7 @@ public class DataInitializer implements CommandLineRunner {
                 destino10.setPrecio(60.0f);
                 destino10.setDuration_time("3-7 días");
                 destino10.setDescription("Destino turístico de clase mundial en la Riviera Maya. Playas de arena blanca, aguas turquesas del Caribe, vida nocturna vibrante y acceso a sitios arqueológicos mayas.");
-                destino10.setCategory(Category.MEXICO);
+                destino10.setCategory(mexico);
                 destino10.setAddress("Cancún, Quintana Roo, México");
                 destino10.setPunctuation(4.5f);
                 destino10.setCity("Cancún");
@@ -267,5 +282,21 @@ public class DataInitializer implements CommandLineRunner {
         } else {
             System.out.println("Destinations already exist in database, skipping creation.");
         }
+    }
+
+    private Category getOrCreateCategory(String name, String description, String imageUrl) {
+        return categoryRepository.findAll().stream()
+                .filter(c -> c.getName().equalsIgnoreCase(name))
+                .findFirst()
+                .map(existing -> {
+                    if (existing.getImageUrl() == null && imageUrl != null) {
+                        existing.setImageUrl(imageUrl);
+                    }
+                    if (existing.getDescription() == null && description != null) {
+                        existing.setDescription(description);
+                    }
+                    return categoryRepository.save(existing);
+                })
+                .orElseGet(() -> categoryRepository.save(new Category(name, description, imageUrl)));
     }
 }

@@ -11,6 +11,7 @@ public class DestinoDTO {
     private Long id;
     private String name;
     private String city;
+    private Long categoryId;
     private String category;
     private String location;
     private Float precio;
@@ -23,12 +24,13 @@ public class DestinoDTO {
     private List<String> secondaryImages;
     private List<TraitDTO> traits;
 
-    public DestinoDTO(String name, Long id, String category, String city, Float precio, String duration_time, String description, String address, Set<String> languages, Float punctuation, String imageUrl, List<String> secondaryImages, List<TraitDTO> traits) {
+    public DestinoDTO(String name, Long id, Long categoryId, String category, String city, Float precio, String duration_time, String description, String address, Set<String> languages, Float punctuation, String imageUrl, List<String> secondaryImages, List<TraitDTO> traits) {
         this.name = name;
         this.id = id;
+        this.categoryId = categoryId;
         this.category = category;
         this.city = city;
-        this.location = city + ", " + category_to_country(category);
+        this.location = city + ", " + (category != null ? category : "");
         this.precio = precio;
         this.duration_time = duration_time;
         this.description = description;
@@ -38,17 +40,6 @@ public class DestinoDTO {
         this.imageUrl = imageUrl;
         this.secondaryImages = secondaryImages;
         this.traits = traits != null ? traits : Collections.emptyList();
-    }
-
-    private String category_to_country(String category){
-        return switch (category){
-            case "FRANCE" -> "Francia";
-            case "JAPAN" -> "Japón";
-            case "THAILAND" -> "Tailandia";
-            case "GREECE" -> "Grecia";
-            case "MEXICO" -> "Mexico";
-            default -> "Desconocido";
-        };
     }
 
     public Long getId() {
@@ -61,6 +52,10 @@ public class DestinoDTO {
 
     public String getName() {
         return name;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
     }
 
     public String getCategory() {

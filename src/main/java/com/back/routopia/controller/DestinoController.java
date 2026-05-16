@@ -5,6 +5,7 @@ import com.back.routopia.dto.DestinoDTO;
 import com.back.routopia.entity.Category;
 import com.back.routopia.entity.Destino;
 import com.back.routopia.entity.Language;
+import com.back.routopia.service.CategoryService;
 import com.back.routopia.service.DestinoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,13 +34,16 @@ public class DestinoController {
     DestinoService destinoService;
 
     @Autowired
+    CategoryService categoryService;
+
+    @Autowired
     private S3Service s3Service;
 
 
     @Operation(summary = "Get all Destinos")
     @GetMapping
     public ResponseEntity<Page<DestinoDTO>> find_all_destino(
-            @RequestParam(required = false) List<Category> category,
+            @RequestParam(required = false) List<Long> category,
             @RequestParam(required = false) String q,
             Pageable pageable) {
         Page<Destino> pageResult = destinoService.list_all(category, q, pageable);
@@ -47,7 +51,8 @@ public class DestinoController {
         Page<DestinoDTO> responsePage = pageResult.map(destino -> new DestinoDTO(
                 destino.getName(),
                 destino.getId(),
-                destino.getCategory().name(),
+                destino.getCategory() != null ? destino.getCategory().getId() : null,
+                destino.getCategory() != null ? destino.getCategory().getName() : null,
                 destino.getCity(),
                 destino.getPrecio(),
                 destino.getDuration_time(),
@@ -72,7 +77,8 @@ public class DestinoController {
         DestinoDTO destinoDTO = new DestinoDTO(
                 destino.getName(),
                 destino.getId(),
-                destino.getCategory().name(),
+                destino.getCategory() != null ? destino.getCategory().getId() : null,
+                destino.getCategory() != null ? destino.getCategory().getName() : null,
                 destino.getCity(),
                 destino.getPrecio(),
                 destino.getDuration_time(),
@@ -97,7 +103,7 @@ public class DestinoController {
             @RequestParam("description") String description,
             @RequestParam("languages") List<String> languages,
             @RequestParam("location") String location,
-            @RequestParam("category") String category,
+            @RequestParam("categoryId") Long categoryId,
             @RequestParam("score") Float score,
             @RequestParam("city") String city,
             @RequestParam(value = "image", required = false) MultipartFile image,
@@ -107,13 +113,16 @@ public class DestinoController {
         if (destinoService.verify_name(name)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "El nombre del destino ya existe");
         }
+        Category category = categoryService.find_by_id(categoryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Categoría no encontrada"));
+
         Destino destino = new Destino();
         destino.setName(name);
         destino.setPrecio(price);
         destino.setDuration_time(duration);
         destino.setDescription(description);
         destino.setAddress(location);
-        destino.setCategory(Category.valueOf(category));
+        destino.setCategory(category);
         destino.setPunctuation(score);
         destino.setCity(city);
 
@@ -161,7 +170,7 @@ public class DestinoController {
             @RequestParam("description") String description,
             @RequestParam("languages") List<String> languages,
             @RequestParam("location") String location,
-            @RequestParam("category") String category,
+            @RequestParam("categoryId") Long categoryId,
             @RequestParam("score") Float score,
             @RequestParam("city") String city,
             @RequestParam(value = "image", required = false) MultipartFile image,
@@ -173,6 +182,9 @@ public class DestinoController {
         if(!db_destino.isPresent()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Destino no encontrado");
         }
+
+        Category category = categoryService.find_by_id(categoryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Categoría no encontrada"));
 
         // Verificar si el nombre ya existe en otro destino (excluyendo el actual)
         if (destinoService.verify_name(name) && !db_destino.get().getName().equalsIgnoreCase(name)) {
@@ -187,7 +199,7 @@ public class DestinoController {
         destino.setDuration_time(duration);
         destino.setDescription(description);
         destino.setAddress(location);
-        destino.setCategory(Category.valueOf(category));
+        destino.setCategory(category);
         destino.setPunctuation(score);
         destino.setCity(city);
 

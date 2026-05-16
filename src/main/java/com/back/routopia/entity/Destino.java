@@ -24,7 +24,8 @@ public class Destino {
     private String duration_time;
     @Column(columnDefinition = "TEXT")
     private String description;
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
     private Category category;
     @Column
     private String address;

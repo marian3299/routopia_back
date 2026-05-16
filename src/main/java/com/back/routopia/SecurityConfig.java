@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/destino/**").permitAll() // Permitir acceso público a destinos
                         .requestMatchers("/api/traits/**").permitAll() // Permitir acceso público a traits
+                        .requestMatchers("/api/categories/**").permitAll() // Permitir acceso público a categorías
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

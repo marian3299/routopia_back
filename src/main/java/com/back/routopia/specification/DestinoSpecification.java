@@ -1,6 +1,5 @@
 package com.back.routopia.specification;
 
-import com.back.routopia.entity.Category;
 import com.back.routopia.entity.Destino;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -15,12 +14,12 @@ public class DestinoSpecification {
      * <p>
      * Lista vacía o null: no se aplica filtro por categoría (predicado siempre verdadero).
      */
-    public static Specification<Destino> hasCategoryIn(List<Category> categories) {
+    public static Specification<Destino> hasCategoryIn(List<Long> categoryIds) {
         return (root, query, criteriaBuilder) -> {
-            if (categories == null || categories.isEmpty()) {
+            if (categoryIds == null || categoryIds.isEmpty()) {
                 return criteriaBuilder.conjunction();
             }
-            return root.get("category").in(categories);
+            return root.get("category").get("id").in(categoryIds);
         };
     }
 
