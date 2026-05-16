@@ -31,9 +31,9 @@ public class CategoryController {
     @Operation(summary = "Get all Categories")
     @GetMapping
     public ResponseEntity<Page<CategoryDTO>> find_all_categories(
-            @RequestParam(required = false) String q,
+            @RequestParam(value = "q", required = false) String searchTerm,
             @PageableDefault(size = 10) Pageable pageable) {
-        Page<Category> pageResult = categoryService.list_all(q, pageable);
+        Page<Category> pageResult = categoryService.list_all(searchTerm, pageable);
         Page<CategoryDTO> responsePage = pageResult.map(category -> new CategoryDTO(
                 category.getId(),
                 category.getName(),

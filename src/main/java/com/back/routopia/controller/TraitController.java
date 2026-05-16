@@ -18,6 +18,7 @@ import com.back.routopia.entity.Trait;
 import com.back.routopia.dto.TraitDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
@@ -39,8 +40,10 @@ public class TraitController {
 
     @Operation(summary = "Get all Traits")
     @GetMapping
-    public ResponseEntity<Page<TraitDTO>> find_all_traits(Pageable pageable) {
-        Page<Trait> pageResult = traitService.list_all(pageable);
+    public ResponseEntity<Page<TraitDTO>> find_all_traits(
+            @RequestParam(value = "q", required = false) String searchTerm,
+            @PageableDefault(size = 10) Pageable pageable) {
+        Page<Trait> pageResult = traitService.list_all(searchTerm, pageable);
         Page<TraitDTO> responsePage = pageResult.map(trait -> new TraitDTO(
             trait.getId(),
             trait.getName(),

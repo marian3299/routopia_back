@@ -18,7 +18,10 @@ public class TraitService {
         return traitRepository.save(trait);
     }
 
-    public Page<Trait> list_all(Pageable pageable) {
+    public Page<Trait> list_all(String searchTerm, Pageable pageable) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            return traitRepository.searchByName(searchTerm.trim(), pageable);
+        }
         return traitRepository.findAll(pageable);
     }
 

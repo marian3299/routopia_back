@@ -20,7 +20,7 @@ public class CategoryService {
 
     public Page<Category> list_all(String searchTerm, Pageable pageable) {
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            return categoryRepository.findByNameContainingIgnoreCase(searchTerm.trim(), pageable);
+            return categoryRepository.searchByName(searchTerm.trim(), pageable);
         }
         return categoryRepository.findAll(pageable);
     }
