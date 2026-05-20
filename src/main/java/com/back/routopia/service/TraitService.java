@@ -25,6 +25,13 @@ public class TraitService {
         return traitRepository.findAll(pageable);
     }
 
+    public List<Trait> list_all_unpaginated(String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            return traitRepository.searchByNameAll(searchTerm.trim());
+        }
+        return traitRepository.findAll();
+    }
+
     public Optional<Trait> find_by_id(Long id) { return traitRepository.findById(id); }
 
     public Trait update_trait(Trait trait) {

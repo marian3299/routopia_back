@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +24,13 @@ public class CategoryService {
             return categoryRepository.searchByName(searchTerm.trim(), pageable);
         }
         return categoryRepository.findAll(pageable);
+    }
+
+    public List<Category> list_all_unpaginated(String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            return categoryRepository.searchByNameAll(searchTerm.trim());
+        }
+        return categoryRepository.findAll();
     }
 
     public Optional<Category> find_by_id(Long id) {

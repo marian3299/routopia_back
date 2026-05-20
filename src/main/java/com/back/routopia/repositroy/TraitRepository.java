@@ -8,9 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface TraitRepository extends JpaRepository<Trait, Long> {
 
     @Query("SELECT t FROM Trait t WHERE LOWER(t.name) LIKE LOWER(CONCAT('%', :search, '%'))")
     Page<Trait> searchByName(@Param("search") String search, Pageable pageable);
+
+    @Query("SELECT t FROM Trait t WHERE LOWER(t.name) LIKE LOWER(CONCAT('%', :search, '%'))")
+    List<Trait> searchByNameAll(@Param("search") String search);
 }

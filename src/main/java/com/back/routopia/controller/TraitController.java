@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.back.routopia.entity.Trait;
 import com.back.routopia.dto.TraitDTO;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -42,12 +44,21 @@ public class TraitController {
     @GetMapping
     public ResponseEntity<Page<TraitDTO>> find_all_traits(
             @RequestParam(value = "q", required = false) String searchTerm,
+            @RequestParam(value = "paginate", defaultValue = "true") boolean paginate,
             @PageableDefault(size = 10) Pageable pageable) {
+        if (!paginate) {
+            List<Trait> traits = traitService.list_all_unpaginated(searchTerm);
+            List<TraitDTO> dtos = traits.stream()
+                    .map(trait -> new TraitDTO(trait.getId(), trait.getName(), trait.getImageUrl()))
+                    .toList();
+            return ResponseEntity.ok(new PageImpl<>(dtos));
+        }
+
         Page<Trait> pageResult = traitService.list_all(searchTerm, pageable);
         Page<TraitDTO> responsePage = pageResult.map(trait -> new TraitDTO(
             trait.getId(),
             trait.getName(),
-            trait.getImageUrl()   
+            trait.getImageUrl()
         ));
         return ResponseEntity.ok(responsePage);
     }
