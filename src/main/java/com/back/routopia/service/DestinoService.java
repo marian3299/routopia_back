@@ -1,10 +1,14 @@
 package com.back.routopia.service;
 
+import com.back.routopia.dto.PolicyRequestDTO;
 import com.back.routopia.entity.Destino;
+import com.back.routopia.entity.Policy;
 import com.back.routopia.entity.Trait;
 import com.back.routopia.repositroy.DestinoRespository;
 import com.back.routopia.repositroy.TraitRepository;
 import com.back.routopia.specification.DestinoSpecification;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -13,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +31,46 @@ public class DestinoService {
     @Autowired
     private TraitRepository traitRepository;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     public boolean verify_name(String name) {return destinoRespository.existsByNameIgnoreCase(name);}
+
+    public void assignPoliciesToDestino(Destino destino, String policiesJson) {
+        if (destino.getPolicies() == null) {
+            destino.setPolicies(new ArrayList<>());
+        }
+        destino.getPolicies().clear();
+
+        if (policiesJson == null || policiesJson.isBlank()) {
+            return;
+        }
+
+        try {
+            List<PolicyRequestDTO> requests = objectMapper.readValue(
+                    policiesJson,
+                    new TypeReference<List<PolicyRequestDTO>>() {}
+            );
+
+            for (PolicyRequestDTO request : requests) {
+                if (request.getTitle() == null || request.getTitle().isBlank()) {
+                    continue;
+                }
+                Policy policy = new Policy();
+                policy.setTitle(request.getTitle().trim());
+                policy.setDescription(
+                        request.getDescription() != null ? request.getDescription().trim() : ""
+                );
+                policy.setDestino(destino);
+                destino.getPolicies().add(policy);
+            }
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Formato de políticas inválido"
+            );
+        }
+    }
 
     /**
      * Sincroniza los traits del destino con los IDs indicados (reemplaza la asociación anterior).

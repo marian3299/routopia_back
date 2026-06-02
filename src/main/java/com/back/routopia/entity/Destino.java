@@ -3,6 +3,7 @@ package com.back.routopia.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,6 +56,10 @@ public class Destino {
             inverseJoinColumns = @JoinColumn(name = "trait_id")
     )
     private Set<Trait> traits = new HashSet<>();
+
+    @OneToMany(mappedBy = "destino", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OrderBy("id ASC")
+    private List<Policy> policies = new ArrayList<>();
 
     public Destino() {
 
@@ -195,5 +200,13 @@ public class Destino {
 
     public void setTraits(Set<Trait> traits) {
         this.traits = traits != null ? traits : new HashSet<>();
+    }
+
+    public List<Policy> getPolicies() {
+        return policies;
+    }
+
+    public void setPolicies(List<Policy> policies) {
+        this.policies = policies != null ? policies : new ArrayList<>();
     }
 }

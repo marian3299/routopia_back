@@ -1,5 +1,6 @@
 package com.back.routopia.dto;
 
+import com.back.routopia.entity.Policy;
 import com.back.routopia.entity.Trait;
 
 import java.util.Collections;
@@ -23,8 +24,9 @@ public class DestinoDTO {
     private String imageUrl;
     private List<String> secondaryImages;
     private List<TraitDTO> traits;
+    private List<PolicyDTO> policies;
 
-    public DestinoDTO(String name, Long id, Long categoryId, String category, String city, Float precio, String duration_time, String description, String address, Set<String> languages, Float punctuation, String imageUrl, List<String> secondaryImages, List<TraitDTO> traits) {
+    public DestinoDTO(String name, Long id, Long categoryId, String category, String city, Float precio, String duration_time, String description, String address, Set<String> languages, Float punctuation, String imageUrl, List<String> secondaryImages, List<TraitDTO> traits, List<PolicyDTO> policies) {
         this.name = name;
         this.id = id;
         this.categoryId = categoryId;
@@ -40,6 +42,7 @@ public class DestinoDTO {
         this.imageUrl = imageUrl;
         this.secondaryImages = secondaryImages;
         this.traits = traits != null ? traits : Collections.emptyList();
+        this.policies = policies != null ? policies : Collections.emptyList();
     }
 
     public Long getId() {
@@ -106,6 +109,10 @@ public class DestinoDTO {
         this.traits = traits;
     }
 
+    public List<PolicyDTO> getPolicies() {
+        return policies;
+    }
+
     /** Mapea entidades Trait a DTOs para respuestas API. */
     public static List<TraitDTO> traitsFromEntity(Set<Trait> traitSet) {
         if (traitSet == null || traitSet.isEmpty()) {
@@ -113,6 +120,16 @@ public class DestinoDTO {
         }
         return traitSet.stream()
                 .map(t -> new TraitDTO(t.getId(), t.getName(), t.getImageUrl()))
+                .collect(Collectors.toList());
+    }
+
+    /** Mapea entidades Policy a DTOs para respuestas API. */
+    public static List<PolicyDTO> policiesFromEntity(List<Policy> policyList) {
+        if (policyList == null || policyList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return policyList.stream()
+                .map(p -> new PolicyDTO(p.getId(), p.getTitle(), p.getDescription()))
                 .collect(Collectors.toList());
     }
 }

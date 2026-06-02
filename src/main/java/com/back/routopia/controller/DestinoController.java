@@ -48,22 +48,7 @@ public class DestinoController {
             Pageable pageable) {
         Page<Destino> pageResult = destinoService.list_all(category, searchTerm, pageable);
 
-        Page<DestinoDTO> responsePage = pageResult.map(destino -> new DestinoDTO(
-                destino.getName(),
-                destino.getId(),
-                destino.getCategory() != null ? destino.getCategory().getId() : null,
-                destino.getCategory() != null ? destino.getCategory().getName() : null,
-                destino.getCity(),
-                destino.getPrecio(),
-                destino.getDuration_time(),
-                destino.getDescription(),
-                destino.getAddress(),
-                destino.getLanguages().stream().map(Language::name).collect(Collectors.toSet()),
-                destino.getPunctuation(),
-                destino.getImageUrl(),
-                destino.getSecondaryImages(),
-                DestinoDTO.traitsFromEntity(destino.getTraits())
-        ));
+        Page<DestinoDTO> responsePage = pageResult.map(this::toDto);
 
         return ResponseEntity.ok(responsePage);
     }
@@ -74,24 +59,7 @@ public class DestinoController {
         Destino destino = destinoService.find_by_id(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Destino no encontrado"));
 
-        DestinoDTO destinoDTO = new DestinoDTO(
-                destino.getName(),
-                destino.getId(),
-                destino.getCategory() != null ? destino.getCategory().getId() : null,
-                destino.getCategory() != null ? destino.getCategory().getName() : null,
-                destino.getCity(),
-                destino.getPrecio(),
-                destino.getDuration_time(),
-                destino.getDescription(),
-                destino.getAddress(),
-                destino.getLanguages().stream().map(Language::name).collect(Collectors.toSet()),
-                destino.getPunctuation(),
-                destino.getImageUrl(),
-                destino.getSecondaryImages(),
-                DestinoDTO.traitsFromEntity(destino.getTraits())
-        );
-
-        return ResponseEntity.ok(destinoDTO);
+        return ResponseEntity.ok(toDto(destino));
     }
 
     @Operation(summary = "Crear destino")
@@ -108,7 +76,8 @@ public class DestinoController {
             @RequestParam("city") String city,
             @RequestParam(value = "image", required = false) MultipartFile image,
             @RequestParam(value = "image_list", required = false) List<MultipartFile> imageList,
-            @RequestParam(value = "traits", required = false) List<Long> traitIds
+            @RequestParam(value = "traits", required = false) List<Long> traitIds,
+            @RequestParam(value = "policies", required = false) String policiesJson
     ){
         if (destinoService.verify_name(name)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "El nombre del destino ya existe");
@@ -154,6 +123,7 @@ public class DestinoController {
         }
 
         destinoService.assignTraitsToDestino(saved_destino, traitIds);
+        destinoService.assignPoliciesToDestino(saved_destino, policiesJson);
 
         saved_destino = destinoService.create_destino(saved_destino);
 
@@ -175,7 +145,8 @@ public class DestinoController {
             @RequestParam("city") String city,
             @RequestParam(value = "image", required = false) MultipartFile image,
             @RequestParam(value = "image_list", required = false) List<MultipartFile> imageList,
-            @RequestParam(value = "traits", required = false) List<Long> traitIds
+            @RequestParam(value = "traits", required = false) List<Long> traitIds,
+            @RequestParam(value = "policies", required = false) String policiesJson
     ){
         Optional<Destino> db_destino = destinoService.find_by_id(id);
         
@@ -241,9 +212,30 @@ public class DestinoController {
         }
 
         destinoService.assignTraitsToDestino(destino, traitIds);
+        destinoService.assignPoliciesToDestino(destino, policiesJson);
 
         Destino updated_destino = destinoService.update_destino(destino);
         return ResponseEntity.ok(updated_destino);
+    }
+
+    private DestinoDTO toDto(Destino destino) {
+        return new DestinoDTO(
+                destino.getName(),
+                destino.getId(),
+                destino.getCategory() != null ? destino.getCategory().getId() : null,
+                destino.getCategory() != null ? destino.getCategory().getName() : null,
+                destino.getCity(),
+                destino.getPrecio(),
+                destino.getDuration_time(),
+                destino.getDescription(),
+                destino.getAddress(),
+                destino.getLanguages().stream().map(Language::name).collect(Collectors.toSet()),
+                destino.getPunctuation(),
+                destino.getImageUrl(),
+                destino.getSecondaryImages(),
+                DestinoDTO.traitsFromEntity(destino.getTraits()),
+                DestinoDTO.policiesFromEntity(destino.getPolicies())
+        );
     }
 
     @DeleteMapping("/{id}")

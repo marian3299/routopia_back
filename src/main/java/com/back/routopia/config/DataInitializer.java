@@ -95,6 +95,13 @@ public class DataInitializer implements CommandLineRunner {
                     "https://images.unsplash.com/photo-1549144511-f099e773c147?w=400&h=300&fit=crop"
                 ));
                 destino1.setLanguages(new HashSet<>(Arrays.asList(Language.FRENCH, Language.ENGLISH)));
+                addSamplePolicies(destino1, new String[][]{
+                        {"Qué llevar", "Calzado cómodo, agua, protector solar y ropa según la temporada."},
+                        {"Restricciones de acceso", "No apto para personas con movilidad muy reducida por escaleras y ascensores con capacidad limitada."},
+                        {"Clima y cancelaciones", "Actividad al aire libre; puede modificarse por viento fuerte, lluvia o condiciones de seguridad."},
+                        {"Seguridad en el monumento", "Respetar barreras, no lanzar objetos y seguir las indicaciones del personal en todo momento."},
+                        {"Documentación", "Presentar identificación válida si se solicita en el acceso o al recoger entradas."}
+                });
                 destinoRepository.save(destino1);
             }
 
@@ -115,6 +122,13 @@ public class DataInitializer implements CommandLineRunner {
                     "https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?w=400&h=300&fit=crop"
                 ));
                 destino2.setLanguages(new HashSet<>(Arrays.asList(Language.FRENCH, Language.ENGLISH, Language.SPANISH)));
+                addSamplePolicies(destino2, new String[][]{
+                        {"Qué llevar", "Ropa cómoda para caminar varias horas, agua y auriculares si usas audioguía."},
+                        {"Reglas del museo", "No flash en las obras, no tocar exhibiciones y respetar el silencio en salas señaladas."},
+                        {"Mochilas y objetos", "Mochilas grandes deben dejarse en consigna; revisar objetos prohibidos antes de ingresar."},
+                        {"Horarios y entradas", "Llegar con la entrada reservada; el acceso puede denegarse fuera del horario indicado."},
+                        {"Accesibilidad", "Recorrido extenso; consultar rutas accesibles y sillas de ruedas disponibles en recepción."}
+                });
                 destinoRepository.save(destino2);
             }
 
@@ -135,6 +149,13 @@ public class DataInitializer implements CommandLineRunner {
                     "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&h=300&fit=crop"
                 ));
                 destino3.setLanguages(new HashSet<>(Arrays.asList(Language.ENGLISH)));
+                addSamplePolicies(destino3, new String[][]{
+                        {"Qué llevar", "Calzado cómodo, efectivo para ofrendas o mercado, y respeto por el vestuario modesto."},
+                        {"Conducta en el templo", "No fotografiar en zonas restringidas; mantener silencio y seguir las señales del recinto."},
+                        {"Horarios de visita", "El templo puede cerrar por ceremonias; confirmar horario el día de la visita."},
+                        {"Clima", "En verano llevar agua y sombrero; en invierno abrigo ligero por viento en la zona."},
+                        {"Seguridad", "Cuidado con multitudes en festivales; vigilar pertenencias en Nakamise y alrededores."}
+                });
                 destinoRepository.save(destino3);
             }
 
@@ -155,6 +176,13 @@ public class DataInitializer implements CommandLineRunner {
                     "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=400&h=300&fit=crop"
                 ));
                 destino4.setLanguages(new HashSet<>(Arrays.asList(Language.ENGLISH)));
+                addSamplePolicies(destino4, new String[][]{
+                        {"Qué llevar", "Ropa en capas, calzado de trekking, guantes y linterna si subes al amanecer."},
+                        {"Condición física", "Ascenso exigente; no recomendado sin preparación previa ni para menores sin supervisión."},
+                        {"Clima y visibilidad", "La cumbre puede cerrarse por nieve, viento o baja visibilidad sin reembolso parcial garantizado."},
+                        {"Altitud y salud", "Posible mal de altura; hidratarse y descender si hay mareo, dolor de cabeza o náuseas."},
+                        {"Medio ambiente", "Llevar basura de vuelta; no dejar residuos en la montaña ni salirse de senderos marcados."}
+                });
                 destinoRepository.save(destino4);
             }
 
@@ -175,6 +203,13 @@ public class DataInitializer implements CommandLineRunner {
                     "https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=400&h=300&fit=crop"
                 ));
                 destino5.setLanguages(new HashSet<>(Arrays.asList(Language.ENGLISH, Language.SPANISH)));
+                addSamplePolicies(destino5, new String[][]{
+                        {"Qué llevar", "Gorra, agua, calzado antideslizante y protección solar; el recinto es muy soleado."},
+                        {"Protección del patrimonio", "No tocar muros ni esculturas; no subir a estructuras no autorizadas."},
+                        {"Calor y horarios", "Evitar horas pico de sol (mediodía); mejor visitar temprano o al atardecer."},
+                        {"Accesibilidad", "Terreno irregular y pendientes; consultar ascensores o rutas para movilidad reducida."},
+                        {"Entradas", "Conservar el ticket durante toda la visita; algunas zonas requieren control adicional."}
+                });
                 destinoRepository.save(destino5);
             }
 
@@ -195,6 +230,13 @@ public class DataInitializer implements CommandLineRunner {
                     "https://images.unsplash.com/photo-1533105079780-92b9be482077?w=400&h=300&fit=crop"
                 ));
                 destino6.setLanguages(new HashSet<>(Arrays.asList(Language.ENGLISH, Language.SPANISH)));
+                addSamplePolicies(destino6, new String[][]{
+                        {"Qué llevar", "Ropa ligera, calzado cómodo para calles empedradas y bloqueador solar alto."},
+                        {"Transporte en la isla", "Muchas zonas solo accesibles a pie o en ATV autorizado; verificar licencia y seguro."},
+                        {"Clima y viento", "Vientos fuertes en temporada alta; actividades en barco pueden cancelarse por oleaje."},
+                        {"Respeto local", "No invadir propiedades privadas para fotos; respetar iglesias y horarios de misa."},
+                        {"Hidratación y alcohol", "Beber agua con frecuencia; consumir alcohol con moderación bajo el sol."}
+                });
                 destinoRepository.save(destino6);
             }
 
@@ -215,6 +257,13 @@ public class DataInitializer implements CommandLineRunner {
                     "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=400&h=300&fit=crop"
                 ));
                 destino7.setLanguages(new HashSet<>(Arrays.asList(Language.ENGLISH)));
+                addSamplePolicies(destino7, new String[][]{
+                        {"Vestimenta", "Hombros y rodillas cubiertos; zapatos cerrados obligatorios en áreas del palacio."},
+                        {"Qué llevar", "Agua, abanico o paño, y documento de identidad para controles de seguridad."},
+                        {"Zonas restringidas", "Algunas salas cierran por eventos oficiales; no fotografiar donde esté prohibido."},
+                        {"Seguridad", "Pasar por detectores de metales; no llevar objetos punzantes ni drones."},
+                        {"Calor y multitudes", "Llegar temprano; hidratarse y protegerse del sol en colas exteriores."}
+                });
                 destinoRepository.save(destino7);
             }
 
@@ -235,6 +284,13 @@ public class DataInitializer implements CommandLineRunner {
                     "https://images.unsplash.com/photo-1528181304800-259b08848526?w=400&h=300&fit=crop"
                 ));
                 destino8.setLanguages(new HashSet<>(Arrays.asList(Language.ENGLISH)));
+                addSamplePolicies(destino8, new String[][]{
+                        {"Qué llevar", "Traje de baño, toalla, protector solar reef-safe y bolsa impermeable para el barco."},
+                        {"Snorkel y buceo", "No tocar corales ni fauna marina; seguir siempre al guía y compañero de buceo."},
+                        {"Clima y mar", "Salidas pueden cancelarse por oleaje o lluvia; no hay garantía de visibilidad submarina."},
+                        {"Medio ambiente", "Prohibido alimentar peces o dejar basura en playas y aguas protegidas."},
+                        {"Salud", "Usar chaleco salvavidas en embarcaciones; informar alergias o condiciones médicas al operador."}
+                });
                 destinoRepository.save(destino8);
             }
 
@@ -255,6 +311,13 @@ public class DataInitializer implements CommandLineRunner {
                     "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop"
                 ));
                 destino9.setLanguages(new HashSet<>(Arrays.asList(Language.SPANISH, Language.ENGLISH)));
+                addSamplePolicies(destino9, new String[][]{
+                        {"Qué llevar", "Sombrero, agua abundante, calzado cerrado y repelente; hay poca sombra en el sitio."},
+                        {"Protección arqueológica", "No escalar estructuras ni tocar inscripciones; permanecer en senderos señalados."},
+                        {"Calor", "Evitar visita al mediodía; riesgo de golpe de calor en meses de mayor temperatura."},
+                        {"Guías y zonas", "Algunas áreas solo con guía certificado; respetar cercas de restauración."},
+                        {"Fotografía y drones", "Drones no permitidos sin permiso; flash restringido en interiores de estructuras abiertas."}
+                });
                 destinoRepository.save(destino9);
             }
 
@@ -275,12 +338,27 @@ public class DataInitializer implements CommandLineRunner {
                     "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop"
                 ));
                 destino10.setLanguages(new HashSet<>(Arrays.asList(Language.SPANISH, Language.ENGLISH)));
+                addSamplePolicies(destino10, new String[][]{
+                        {"Qué llevar", "Traje de baño, sandalias, protector solar y efectivo para propinas en zona hotelera."},
+                        {"Playas y mar", "Obedecer banderas de seguridad; no nadar en zonas con corrientes o sin vigilancia."},
+                        {"Sol y hidratación", "Reaplicar bloqueador cada dos horas; beber agua embotellada y evitar exposición prolongada."},
+                        {"Actividades acuáticas", "Verificar que operadores tengan permisos; usar chaleco en motos acuáticas y parasailing."},
+                        {"Seguridad personal", "No dejar objetos de valor en la playa; usar cajeros en lugares concurridos y bien iluminados."}
+                });
                 destinoRepository.save(destino10);
             }
 
             System.out.println("✅ 10 sample destinations created successfully!");
         } else {
             System.out.println("Destinations already exist in database, skipping creation.");
+        }
+    }
+
+    private void addSamplePolicies(Destino destino, String[][] policiesData) {
+        for (String[] policyData : policiesData) {
+            Policy policy = new Policy(policyData[0], policyData[1]);
+            policy.setDestino(destino);
+            destino.getPolicies().add(policy);
         }
     }
 

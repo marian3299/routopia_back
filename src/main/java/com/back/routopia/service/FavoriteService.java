@@ -76,7 +76,8 @@ public class FavoriteService {
                 destino.getPunctuation(),
                 destino.getImageUrl(),
                 destino.getSecondaryImages(),
-                DestinoDTO.traitsFromEntity(destino.getTraits())
+                DestinoDTO.traitsFromEntity(destino.getTraits()),
+                DestinoDTO.policiesFromEntity(destino.getPolicies())
         );
     }
 }
