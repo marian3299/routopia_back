@@ -1,12 +1,16 @@
 package com.back.routopia.service;
 
+import com.back.routopia.dto.DestinoDTO;
 import com.back.routopia.dto.FavoriteToggleDTO;
 import com.back.routopia.entity.Destino;
 import com.back.routopia.entity.Favorite;
+import com.back.routopia.entity.Language;
 import com.back.routopia.entity.User;
 import com.back.routopia.repositroy.DestinoRespository;
 import com.back.routopia.repositroy.FavoriteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class FavoriteService {
@@ -26,6 +31,11 @@ public class FavoriteService {
 
     public List<Long> getFavoriteDestinoIds(User user) {
         return favoriteRepository.findDestinoIdsByUserId(user.getId());
+    }
+
+    public Page<DestinoDTO> getFavoriteDestinos(User user, Pageable pageable) {
+        return favoriteRepository.findByUserIdOrderByCreatedAtDesc(user.getId(), pageable)
+                .map(favorite -> mapDestinoToDto(favorite.getDestino()));
     }
 
     @Transactional
@@ -49,5 +59,24 @@ public class FavoriteService {
         favoriteRepository.save(favorite);
 
         return new FavoriteToggleDTO(destinoId, true);
+    }
+
+    private DestinoDTO mapDestinoToDto(Destino destino) {
+        return new DestinoDTO(
+                destino.getName(),
+                destino.getId(),
+                destino.getCategory() != null ? destino.getCategory().getId() : null,
+                destino.getCategory() != null ? destino.getCategory().getName() : null,
+                destino.getCity(),
+                destino.getPrecio(),
+                destino.getDuration_time(),
+                destino.getDescription(),
+                destino.getAddress(),
+                destino.getLanguages().stream().map(Language::name).collect(Collectors.toSet()),
+                destino.getPunctuation(),
+                destino.getImageUrl(),
+                destino.getSecondaryImages(),
+                DestinoDTO.traitsFromEntity(destino.getTraits())
+        );
     }
 }

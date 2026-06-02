@@ -1,11 +1,14 @@
 package com.back.routopia.controller;
 
+import com.back.routopia.dto.DestinoDTO;
 import com.back.routopia.dto.FavoriteToggleDTO;
 import com.back.routopia.entity.User;
 import com.back.routopia.service.FavoriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +29,16 @@ public class FavoriteController {
     public ResponseEntity<List<Long>> getFavorites(Authentication authentication) {
         User user = getAuthenticatedUser(authentication);
         return ResponseEntity.ok(favoriteService.getFavoriteDestinoIds(user));
+    }
+
+    @Operation(summary = "Obtener destinos favoritos paginados del usuario autenticado")
+    @GetMapping("/destinos")
+    public ResponseEntity<Page<DestinoDTO>> getFavoriteDestinos(
+            Authentication authentication,
+            Pageable pageable
+    ) {
+        User user = getAuthenticatedUser(authentication);
+        return ResponseEntity.ok(favoriteService.getFavoriteDestinos(user, pageable));
     }
 
     @Operation(summary = "Marcar o desmarcar un destino como favorito")
