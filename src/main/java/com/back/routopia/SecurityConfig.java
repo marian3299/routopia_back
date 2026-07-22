@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/traits/**").permitAll() // Permitir acceso público a traits
                         .requestMatchers("/api/categories/**").permitAll() // Permitir acceso público a categorías
                         .requestMatchers(HttpMethod.GET, "/api/bookings/availability").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/share/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
