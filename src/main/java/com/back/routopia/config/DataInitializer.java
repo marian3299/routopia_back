@@ -1,6 +1,7 @@
 package com.back.routopia.config;
 
 import com.back.routopia.entity.*;
+import com.back.routopia.repositroy.BookingRepository;
 import com.back.routopia.repositroy.CategoryRepository;
 import com.back.routopia.repositroy.DestinoRespository;
 import com.back.routopia.repositroy.UserRepository;
@@ -9,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -23,6 +25,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private BookingRepository bookingRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -61,6 +66,35 @@ public class DataInitializer implements CommandLineRunner {
 
         // Crear destinos de ejemplo si no existen
         createSampleDestinos();
+
+        // Crear una reserva finalizada de ejemplo para poder probar las valoraciones
+        seedDemoBooking();
+    }
+
+    /**
+     * Reserva CONFIRMED con fecha pasada para el usuario demo, para poder probar
+     * de punta a punta la valoración de productos (US#28) sin esperar a que una
+     * reserva real llegue a su fecha.
+     */
+    private void seedDemoBooking() {
+        userRepository.findByEmail("user@routopia.com").ifPresent(demoUser ->
+                destinoRepository.findByNameIgnoreCase("Torre Eiffel").ifPresent(destino -> {
+                    LocalDate pastDate = LocalDate.now().minusDays(30);
+                    boolean alreadyFinished = bookingRepository
+                            .existsByUserIdAndDestinoIdAndStatusAndBookingDateLessThanEqual(
+                                    demoUser.getId(), destino.getId(), "CONFIRMED", LocalDate.now());
+                    if (alreadyFinished || bookingRepository.existsByDestinoIdAndBookingDate(destino.getId(), pastDate)) {
+                        return;
+                    }
+                    Booking booking = new Booking();
+                    booking.setUser(demoUser);
+                    booking.setDestino(destino);
+                    booking.setBookingDate(pastDate);
+                    booking.setPersonCount(2);
+                    bookingRepository.save(booking);
+                    System.out.println("Demo booking (finalizada) creada para user@routopia.com sobre 'Torre Eiffel'");
+                })
+        );
     }
 
     private void createSampleDestinos() {

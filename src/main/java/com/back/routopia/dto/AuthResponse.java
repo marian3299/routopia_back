@@ -4,6 +4,7 @@ import com.back.routopia.entity.Role;
 import java.util.List;
 
 public class AuthResponse {
+    private Long id;
     private String token;
     private String type = "Bearer";
     private String nombre;
@@ -12,7 +13,8 @@ public class AuthResponse {
     private Role role;
     private List<String> permissions;
 
-    public AuthResponse(String token, String nombre, String apellido, String email, Role role, List<String> permissions) {
+    public AuthResponse(Long id, String token, String nombre, String apellido, String email, Role role, List<String> permissions) {
+        this.id = id;
         this.token = token;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -22,6 +24,9 @@ public class AuthResponse {
     }
 
     // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
 

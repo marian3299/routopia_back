@@ -39,6 +39,7 @@ public class AuthController {
             String token = jwtService.generateToken(user);
 
             AuthResponse response = new AuthResponse(
+                    user.getId(),
                     token,
                     user.getNombre(),
                     user.getApellido(),
@@ -69,6 +70,7 @@ public class AuthController {
             String token = jwtService.generateToken(user);
 
             AuthResponse response = new AuthResponse(
+                    user.getId(),
                     token,
                     user.getNombre(),
                     user.getApellido(),
@@ -89,6 +91,7 @@ public class AuthController {
         if (authentication != null && authentication.isAuthenticated()) {
             User user = (User) authentication.getPrincipal();
             return ResponseEntity.ok(new AuthResponse(
+                    user.getId(),
                     null, // No enviamos el token de nuevo
                     user.getNombre(),
                     user.getApellido(),
