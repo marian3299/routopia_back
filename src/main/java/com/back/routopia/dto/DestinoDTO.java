@@ -25,6 +25,7 @@ public class DestinoDTO {
     private List<String> secondaryImages;
     private List<TraitDTO> traits;
     private List<PolicyDTO> policies;
+    private Long reviewCount;
 
     public DestinoDTO(String name, Long id, Long categoryId, String category, String city, Float precio, String duration_time, String description, String address, Set<String> languages, Float punctuation, String imageUrl, List<String> secondaryImages, List<TraitDTO> traits, List<PolicyDTO> policies) {
         this.name = name;
@@ -43,6 +44,7 @@ public class DestinoDTO {
         this.secondaryImages = secondaryImages;
         this.traits = traits != null ? traits : Collections.emptyList();
         this.policies = policies != null ? policies : Collections.emptyList();
+        this.reviewCount = 0L;
     }
 
     public Long getId() {
@@ -111,6 +113,14 @@ public class DestinoDTO {
 
     public List<PolicyDTO> getPolicies() {
         return policies;
+    }
+
+    public Long getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(Long reviewCount) {
+        this.reviewCount = reviewCount != null ? reviewCount : 0L;
     }
 
     /** Mapea entidades Trait a DTOs para respuestas API. */

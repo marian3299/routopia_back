@@ -7,6 +7,7 @@ import com.back.routopia.entity.Destino;
 import com.back.routopia.entity.Language;
 import com.back.routopia.service.CategoryService;
 import com.back.routopia.service.DestinoService;
+import com.back.routopia.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class DestinoController {
 
     @Autowired
     private S3Service s3Service;
+
+    @Autowired
+    private ReviewService reviewService;
 
 
     @Operation(summary = "Get all Destinos")
@@ -219,7 +223,7 @@ public class DestinoController {
     }
 
     private DestinoDTO toDto(Destino destino) {
-        return new DestinoDTO(
+        DestinoDTO dto = new DestinoDTO(
                 destino.getName(),
                 destino.getId(),
                 destino.getCategory() != null ? destino.getCategory().getId() : null,
@@ -236,6 +240,8 @@ public class DestinoController {
                 DestinoDTO.traitsFromEntity(destino.getTraits()),
                 DestinoDTO.policiesFromEntity(destino.getPolicies())
         );
+        dto.setReviewCount(reviewService.countByDestinoId(destino.getId()));
+        return dto;
     }
 
     @DeleteMapping("/{id}")

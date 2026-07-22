@@ -14,4 +14,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             LocalDate from,
             LocalDate to
     );
+
+    boolean existsByUserIdAndDestinoIdAndStatusAndBookingDateLessThanEqual(
+            Long userId,
+            Long destinoId,
+            String status,
+            LocalDate bookingDate
+    );
 }

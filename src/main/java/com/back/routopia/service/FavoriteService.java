@@ -8,6 +8,7 @@ import com.back.routopia.entity.Language;
 import com.back.routopia.entity.User;
 import com.back.routopia.repositroy.DestinoRespository;
 import com.back.routopia.repositroy.FavoriteRepository;
+import com.back.routopia.repositroy.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,9 @@ public class FavoriteService {
 
     @Autowired
     private DestinoRespository destinoRespository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     public List<Long> getFavoriteDestinoIds(User user) {
         return favoriteRepository.findDestinoIdsByUserId(user.getId());
@@ -62,7 +66,7 @@ public class FavoriteService {
     }
 
     private DestinoDTO mapDestinoToDto(Destino destino) {
-        return new DestinoDTO(
+        DestinoDTO dto = new DestinoDTO(
                 destino.getName(),
                 destino.getId(),
                 destino.getCategory() != null ? destino.getCategory().getId() : null,
@@ -79,5 +83,7 @@ public class FavoriteService {
                 DestinoDTO.traitsFromEntity(destino.getTraits()),
                 DestinoDTO.policiesFromEntity(destino.getPolicies())
         );
+        dto.setReviewCount(reviewRepository.countByDestinoId(destino.getId()));
+        return dto;
     }
 }
