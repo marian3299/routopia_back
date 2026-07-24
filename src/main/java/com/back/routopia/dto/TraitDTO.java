@@ -4,11 +4,13 @@ public class TraitDTO {
     private Long id;
     private String name;
     private String imageUrl;
+    private boolean deletable;
 
-    public TraitDTO(Long id, String name, String imageUrl) {
+    public TraitDTO(Long id, String name, String imageUrl, boolean deletable) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
+        this.deletable = deletable;
     }
 
     public Long getId() {
@@ -30,5 +32,13 @@ public class TraitDTO {
     public String getImageUrl() {
         return imageUrl;
     }
-    
+
+    public boolean isDeletable() {
+        return deletable;
+    }
+
+    public void setDeletable(boolean deletable) {
+        this.deletable = deletable;
+    }
+
 }

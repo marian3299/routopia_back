@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.back.routopia.service.TraitService;
+import com.back.routopia.repositroy.DestinoRespository;
 import com.back.routopia.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,14 @@ public class TraitController {
     @Autowired
     private S3Service s3Service;
 
+    @Autowired
+    private DestinoRespository destinoRepository;
+
+    private TraitDTO toDTO(Trait trait) {
+        boolean deletable = destinoRepository.countByTraitId(trait.getId()) == 0;
+        return new TraitDTO(trait.getId(), trait.getName(), trait.getImageUrl(), deletable);
+    }
+
     @Operation(summary = "Get all Traits")
     @GetMapping
     public ResponseEntity<Page<TraitDTO>> find_all_traits(
@@ -49,17 +58,13 @@ public class TraitController {
         if (!paginate) {
             List<Trait> traits = traitService.list_all_unpaginated(searchTerm);
             List<TraitDTO> dtos = traits.stream()
-                    .map(trait -> new TraitDTO(trait.getId(), trait.getName(), trait.getImageUrl()))
+                    .map(this::toDTO)
                     .toList();
             return ResponseEntity.ok(new PageImpl<>(dtos));
         }
 
         Page<Trait> pageResult = traitService.list_all(searchTerm, pageable);
-        Page<TraitDTO> responsePage = pageResult.map(trait -> new TraitDTO(
-            trait.getId(),
-            trait.getName(),
-            trait.getImageUrl()
-        ));
+        Page<TraitDTO> responsePage = pageResult.map(this::toDTO);
         return ResponseEntity.ok(responsePage);
     }
 
