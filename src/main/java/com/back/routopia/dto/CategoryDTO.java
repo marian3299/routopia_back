@@ -5,12 +5,14 @@ public class CategoryDTO {
     private String name;
     private String description;
     private String imageUrl;
+    private boolean deletable;
 
-    public CategoryDTO(Long id, String name, String description, String imageUrl) {
+    public CategoryDTO(Long id, String name, String description, String imageUrl, boolean deletable) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
+        this.deletable = deletable;
     }
 
     public Long getId() {
@@ -43,5 +45,13 @@ public class CategoryDTO {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public boolean isDeletable() {
+        return deletable;
+    }
+
+    public void setDeletable(boolean deletable) {
+        this.deletable = deletable;
     }
 }

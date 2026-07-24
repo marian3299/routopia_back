@@ -2,10 +2,13 @@ package com.back.routopia.service;
 
 import com.back.routopia.entity.Category;
 import com.back.routopia.repositroy.CategoryRepository;
+import com.back.routopia.repositroy.DestinoRespository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +17,9 @@ import java.util.Optional;
 public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private DestinoRespository destinoRepository;
 
     public Category create_category(Category category) {
         return categoryRepository.save(category);
@@ -42,6 +48,12 @@ public class CategoryService {
     }
 
     public void delete_category(Long id) {
+        long destinosCount = destinoRepository.countByCategoryId(id);
+        if (destinosCount > 0) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "No se puede eliminar la categoría: tiene " + destinosCount
+                            + " destino(s) asociado(s). Reasigná o eliminá esos destinos primero.");
+        }
         categoryRepository.deleteById(id);
     }
 }

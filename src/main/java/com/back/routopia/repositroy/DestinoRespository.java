@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface DestinoRespository extends JpaRepository<Destino, Long>, JpaSpecificationExecutor<Destino> {
     boolean existsByNameIgnoreCase(String name);
     Optional<Destino> findByNameIgnoreCase(String name);
+    long countByCategoryId(Long categoryId);
 }

@@ -3,6 +3,7 @@ package com.back.routopia.controller;
 import com.back.routopia.S3Service;
 import com.back.routopia.dto.CategoryDTO;
 import com.back.routopia.entity.Category;
+import com.back.routopia.repositroy.DestinoRespository;
 import com.back.routopia.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,6 +32,20 @@ public class CategoryController {
     @Autowired
     private S3Service s3Service;
 
+    @Autowired
+    private DestinoRespository destinoRepository;
+
+    private CategoryDTO toDTO(Category category) {
+        boolean deletable = destinoRepository.countByCategoryId(category.getId()) == 0;
+        return new CategoryDTO(
+                category.getId(),
+                category.getName(),
+                category.getDescription(),
+                category.getImageUrl(),
+                deletable
+        );
+    }
+
     @Operation(summary = "Get all Categories")
     @GetMapping
     public ResponseEntity<Page<CategoryDTO>> find_all_categories(
@@ -40,22 +55,13 @@ public class CategoryController {
         if (!paginate) {
             List<Category> categories = categoryService.list_all_unpaginated(searchTerm);
             List<CategoryDTO> dtos = categories.stream()
-                    .map(category -> new CategoryDTO(
-                            category.getId(),
-                            category.getName(),
-                            category.getDescription(),
-                            category.getImageUrl()))
+                    .map(this::toDTO)
                     .toList();
             return ResponseEntity.ok(new PageImpl<>(dtos));
         }
 
         Page<Category> pageResult = categoryService.list_all(searchTerm, pageable);
-        Page<CategoryDTO> responsePage = pageResult.map(category -> new CategoryDTO(
-                category.getId(),
-                category.getName(),
-                category.getDescription(),
-                category.getImageUrl()
-        ));
+        Page<CategoryDTO> responsePage = pageResult.map(this::toDTO);
         return ResponseEntity.ok(responsePage);
     }
 
@@ -64,12 +70,7 @@ public class CategoryController {
     public ResponseEntity<CategoryDTO> find_category_by_id(@PathVariable Long id) {
         Category category = categoryService.find_by_id(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría no encontrada"));
-        return ResponseEntity.ok(new CategoryDTO(
-                category.getId(),
-                category.getName(),
-                category.getDescription(),
-                category.getImageUrl()
-        ));
+        return ResponseEntity.ok(toDTO(category));
     }
 
     @Operation(summary = "Create a new Category")
