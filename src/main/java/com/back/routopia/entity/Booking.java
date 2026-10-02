@@ -32,6 +32,9 @@ public class Booking {
     @Column(name = "person_count", nullable = false)
     private Integer personCount;
 
+    @Column(length = 500)
+    private String notes;
+
     @Column(nullable = false)
     private String status = "CONFIRMED";
 
@@ -82,6 +85,14 @@ public class Booking {
 
     public void setPersonCount(Integer personCount) {
         this.personCount = personCount;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public String getStatus() {

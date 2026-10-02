@@ -58,6 +58,7 @@ public class BookingService {
         booking.setUser(user);
         booking.setBookingDate(request.getBookingDate());
         booking.setPersonCount(request.getPersonCount());
+        booking.setNotes(request.getNotes());
         booking.setStatus("CONFIRMED");
 
         Booking savedBooking = bookingRepository.save(booking);
@@ -92,6 +93,7 @@ public class BookingService {
                 booking.getUser().getId(),
                 booking.getBookingDate(),
                 booking.getPersonCount(),
+                booking.getNotes(),
                 booking.getStatus(),
                 booking.getCreatedAt()
         );

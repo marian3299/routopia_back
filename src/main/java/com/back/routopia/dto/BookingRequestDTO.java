@@ -7,6 +7,7 @@ public class BookingRequestDTO {
     private Long userId;
     private LocalDate bookingDate;
     private Integer personCount;
+    private String notes;
 
     public Long getDestinoId() {
         return destinoId;
@@ -38,5 +39,13 @@ public class BookingRequestDTO {
 
     public void setPersonCount(Integer personCount) {
         this.personCount = personCount;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

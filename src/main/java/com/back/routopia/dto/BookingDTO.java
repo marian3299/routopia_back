@@ -9,15 +9,17 @@ public class BookingDTO {
     private Long userId;
     private LocalDate bookingDate;
     private Integer personCount;
+    private String notes;
     private String status;
     private LocalDateTime createdAt;
 
-    public BookingDTO(Long id, Long destinoId, Long userId, LocalDate bookingDate, Integer personCount, String status, LocalDateTime createdAt) {
+    public BookingDTO(Long id, Long destinoId, Long userId, LocalDate bookingDate, Integer personCount, String notes, String status, LocalDateTime createdAt) {
         this.id = id;
         this.destinoId = destinoId;
         this.userId = userId;
         this.bookingDate = bookingDate;
         this.personCount = personCount;
+        this.notes = notes;
         this.status = status;
         this.createdAt = createdAt;
     }
@@ -40,6 +42,10 @@ public class BookingDTO {
 
     public Integer getPersonCount() {
         return personCount;
+    }
+
+    public String getNotes() {
+        return notes;
     }
 
     public String getStatus() {
