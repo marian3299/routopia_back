@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,8 +50,9 @@ public class DestinoController {
     public ResponseEntity<Page<DestinoDTO>> find_all_destino(
             @RequestParam(required = false) List<Long> category,
             @RequestParam(value = "q", required = false) String searchTerm,
+            @RequestParam(value = "date", required = false) LocalDate date,
             Pageable pageable) {
-        Page<Destino> pageResult = destinoService.list_all(category, searchTerm, pageable);
+        Page<Destino> pageResult = destinoService.list_all(category, searchTerm, date, pageable);
 
         Page<DestinoDTO> responsePage = pageResult.map(this::toDto);
 

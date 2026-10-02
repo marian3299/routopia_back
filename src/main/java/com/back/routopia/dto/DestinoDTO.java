@@ -129,7 +129,7 @@ public class DestinoDTO {
             return Collections.emptyList();
         }
         return traitSet.stream()
-                .map(t -> new TraitDTO(t.getId(), t.getName(), t.getImageUrl()))
+                .map(t -> new TraitDTO(t.getId(), t.getName(), t.getImageUrl(), false))
                 .collect(Collectors.toList());
     }
 

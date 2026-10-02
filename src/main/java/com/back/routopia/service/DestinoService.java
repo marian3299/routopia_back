@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -95,11 +96,15 @@ public class DestinoService {
         return destinoRespository.save(destino);
     }
 
-    public Page<Destino> list_all(List<Long> categoryIds, String searchTerm, Pageable pageable) {
+    public Page<Destino> list_all(List<Long> categoryIds, String searchTerm, LocalDate availableDate, Pageable pageable) {
         Specification<Destino> spec = Specification.where(DestinoSpecification.hasCategoryIn(categoryIds));
 
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
             spec = spec.and(DestinoSpecification.searchByNameAndCity(searchTerm));
+        }
+
+        if (availableDate != null) {
+            spec = spec.and(DestinoSpecification.isAvailableOnDate(availableDate));
         }
 
         return destinoRespository.findAll(spec, pageable);
