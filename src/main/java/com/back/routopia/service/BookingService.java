@@ -2,6 +2,7 @@ package com.back.routopia.service;
 
 import com.back.routopia.dto.BookingAvailabilityDTO;
 import com.back.routopia.dto.BookingDTO;
+import com.back.routopia.dto.BookingHistoryDTO;
 import com.back.routopia.dto.BookingRequestDTO;
 import com.back.routopia.entity.Booking;
 import com.back.routopia.entity.Destino;
@@ -10,6 +11,8 @@ import com.back.routopia.repositroy.BookingRepository;
 import com.back.routopia.repositroy.DestinoRespository;
 import com.back.routopia.repositroy.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -84,6 +87,27 @@ public class BookingService {
                 .collect(Collectors.toList());
 
         return new BookingAvailabilityDTO(destinoId, from, to, blockedDates);
+    }
+
+    public Page<BookingHistoryDTO> getUserBookingHistory(Long userId, Pageable pageable) {
+        return bookingRepository
+                .findByUserIdOrderByBookingDateDesc(userId, pageable)
+                .map(this::mapToHistoryDTO);
+    }
+
+    private BookingHistoryDTO mapToHistoryDTO(Booking booking) {
+        Destino destino = booking.getDestino();
+        return new BookingHistoryDTO(
+                booking.getId(),
+                destino.getId(),
+                destino.getName(),
+                destino.getImageUrl(),
+                booking.getBookingDate(),
+                booking.getPersonCount(),
+                booking.getNotes(),
+                booking.getStatus(),
+                booking.getCreatedAt()
+        );
     }
 
     private BookingDTO mapToDTO(Booking booking) {

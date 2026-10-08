@@ -1,6 +1,8 @@
 package com.back.routopia.repositroy;
 
 import com.back.routopia.entity.Booking;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -8,6 +10,8 @@ import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     boolean existsByDestinoIdAndBookingDate(Long destinoId, LocalDate bookingDate);
+
+    Page<Booking> findByUserIdOrderByBookingDateDesc(Long userId, Pageable pageable);
 
     List<Booking> findAllByDestinoIdAndBookingDateBetweenOrderByBookingDateAsc(
             Long destinoId,
