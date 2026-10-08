@@ -1,6 +1,7 @@
 package com.back.routopia.config;
 
 import com.back.routopia.entity.*;
+import com.back.routopia.repositroy.AppSettingsRepository;
 import com.back.routopia.repositroy.BookingRepository;
 import com.back.routopia.repositroy.CategoryRepository;
 import com.back.routopia.repositroy.DestinoRespository;
@@ -31,6 +32,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AppSettingsRepository appSettingsRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -69,6 +73,19 @@ public class DataInitializer implements CommandLineRunner {
 
         // Crear una reserva finalizada de ejemplo para poder probar las valoraciones
         seedDemoBooking();
+
+        // Configuración global por defecto (editable luego desde el panel de admin)
+        seedDefaultSettings();
+    }
+
+    private void seedDefaultSettings() {
+        if (appSettingsRepository.count() == 0) {
+            AppSettings settings = new AppSettings();
+            settings.setWhatsappNumber("");
+            settings.setWhatsappMessage("Hola! Tengo una consulta sobre un producto de Routopia.");
+            appSettingsRepository.save(settings);
+            System.out.println("Default app settings created (whatsappNumber vacío) — configurable desde /admin/settings.");
+        }
     }
 
     /**
