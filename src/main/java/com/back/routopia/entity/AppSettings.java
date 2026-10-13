@@ -22,6 +22,13 @@ public class AppSettings {
     @Column(name = "whatsapp_message", length = 500)
     private String whatsappMessage;
 
+    @Column(name = "smtp_email")
+    private String smtpEmail;
+
+    // Contraseña de aplicación de Gmail (no la contraseña normal de la cuenta).
+    @Column(name = "smtp_app_password")
+    private String smtpAppPassword;
+
     public Long getId() {
         return id;
     }
@@ -40,5 +47,21 @@ public class AppSettings {
 
     public void setWhatsappMessage(String whatsappMessage) {
         this.whatsappMessage = whatsappMessage;
+    }
+
+    public String getSmtpEmail() {
+        return smtpEmail;
+    }
+
+    public void setSmtpEmail(String smtpEmail) {
+        this.smtpEmail = smtpEmail;
+    }
+
+    public String getSmtpAppPassword() {
+        return smtpAppPassword;
+    }
+
+    public void setSmtpAppPassword(String smtpAppPassword) {
+        this.smtpAppPassword = smtpAppPassword;
     }
 }

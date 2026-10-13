@@ -25,3 +25,6 @@ aws.s3.bucketName=routopia-imagenes
 # Secreto JWT: usa una cadena larga y aleatoria en producción
 jwt.secret=CAMBIA_ESTO_POR_UN_SECRETO_LARGO_Y_ALEATORIO
 jwt.expiration=86400000
+
+# Número de WhatsApp, mensaje por defecto y credenciales SMTP (Gmail) NO se configuran acá:
+# se cargan en runtime desde el panel de superadmin (/admin/settings), guardadas en la tabla app_settings.

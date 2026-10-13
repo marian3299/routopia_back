@@ -12,6 +12,7 @@ public class AppSettingsService {
 
     private static final Long SETTINGS_ID = 1L;
     private static final String WHATSAPP_NUMBER_PATTERN = "^\\d{8,15}$";
+    private static final String EMAIL_PATTERN = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
 
     @Autowired
     private AppSettingsRepository appSettingsRepository;
@@ -35,6 +36,26 @@ public class AppSettingsService {
         AppSettings settings = getSettings();
         settings.setWhatsappNumber(whatsappNumber);
         settings.setWhatsappMessage(whatsappMessage.trim());
+        return appSettingsRepository.save(settings);
+    }
+
+    public AppSettings updateEmailSettings(String smtpEmail, String smtpAppPassword) {
+        if (smtpEmail == null || !smtpEmail.matches(EMAIL_PATTERN)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingresá un email válido");
+        }
+
+        AppSettings settings = getSettings();
+        boolean passwordProvided = smtpAppPassword != null && !smtpAppPassword.trim().isEmpty();
+        boolean hasExistingPassword = settings.getSmtpAppPassword() != null && !settings.getSmtpAppPassword().trim().isEmpty();
+
+        if (!passwordProvided && !hasExistingPassword) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña de aplicación es obligatoria la primera vez");
+        }
+
+        settings.setSmtpEmail(smtpEmail.trim());
+        if (passwordProvided) {
+            settings.setSmtpAppPassword(smtpAppPassword.trim());
+        }
         return appSettingsRepository.save(settings);
     }
 }

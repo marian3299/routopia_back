@@ -34,6 +34,9 @@ public class BookingService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     public BookingDTO createBooking(BookingRequestDTO request) {
         if (request.getDestinoId() == null || request.getUserId() == null || request.getBookingDate() == null || request.getPersonCount() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Faltan datos obligatorios para crear la reserva");
@@ -65,6 +68,7 @@ public class BookingService {
         booking.setStatus("CONFIRMED");
 
         Booking savedBooking = bookingRepository.save(booking);
+        emailService.sendBookingConfirmation(savedBooking);
         return mapToDTO(savedBooking);
     }
 
