@@ -87,7 +87,7 @@ public class CategoryController {
         Category savedCategory = categoryService.create_category(category);
 
         if (image != null && !image.isEmpty()) {
-            String key = "categories/" + savedCategory.getId() + "/" + image.getOriginalFilename();
+            String key = "categories/" + savedCategory.getId() + "/" + S3Service.sanitizeFileName(image.getOriginalFilename());
             String imageUrl = s3Service.uploadFile(image, key);
             savedCategory.setImageUrl(imageUrl);
             savedCategory = categoryService.update_category(savedCategory);
@@ -111,7 +111,7 @@ public class CategoryController {
         category.setDescription(description);
 
         if (image != null && !image.isEmpty()) {
-            String key = "categories/" + category.getId() + "/" + image.getOriginalFilename();
+            String key = "categories/" + category.getId() + "/" + S3Service.sanitizeFileName(image.getOriginalFilename());
             String imageUrl = s3Service.uploadFile(image, key);
             category.setImageUrl(imageUrl);
         }

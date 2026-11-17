@@ -31,8 +31,21 @@ public class S3Service {
     }
 
     public String uploadFile(MultipartFile file){
-        String key = System.currentTimeMillis() + "-" + file.getOriginalFilename();
+        String key = System.currentTimeMillis() + "-" + sanitizeFileName(file.getOriginalFilename());
         return uploadFile(file, key);
+    }
+
+    /**
+     * Reemplaza espacios, paréntesis y demás caracteres no alfanuméricos del nombre
+     * original por "_" antes de usarlo como parte de la key de S3. Evita que la URL
+     * resultante rompa el parsing de CSS url(...) sin comillas (espacio = fin de URL)
+     * u otros contextos que no encodeen la URL automáticamente.
+     */
+    public static String sanitizeFileName(String filename) {
+        if (filename == null || filename.isBlank()) {
+            return "file";
+        }
+        return filename.trim().replaceAll("[^a-zA-Z0-9._-]", "_");
     }
 
     public String uploadFile(MultipartFile file, String key) {

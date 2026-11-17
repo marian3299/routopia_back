@@ -80,7 +80,7 @@ public class TraitController {
         Trait saved_trait = traitService.create_trait(trait);
 
         if (image != null && !image.isEmpty()) {
-            String key = "traits/" + saved_trait.getId() + "/" + image.getOriginalFilename();
+            String key = "traits/" + saved_trait.getId() + "/" + S3Service.sanitizeFileName(image.getOriginalFilename());
             String imageUrl = s3Service.uploadFile(image, key);
             saved_trait.setImageUrl(imageUrl);
         }
@@ -106,7 +106,7 @@ public class TraitController {
         Trait trait = db_trait.get();
         trait.setName(name);
         if (image != null && !image.isEmpty()) {
-            String key = "traits/" + trait.getId() + "/" + image.getOriginalFilename();
+            String key = "traits/" + trait.getId() + "/" + S3Service.sanitizeFileName(image.getOriginalFilename());
             String imageUrl = s3Service.uploadFile(image, key);
             trait.setImageUrl(imageUrl);
         }

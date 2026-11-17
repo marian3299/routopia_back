@@ -122,7 +122,7 @@ public class DestinoController {
         Destino saved_destino = destinoService.create_destino(destino);
 
         if (image != null && !image.isEmpty()) {
-            String key = "main-images/" + saved_destino.getId() + "/" + image.getOriginalFilename();
+            String key = "main-images/" + saved_destino.getId() + "/" + S3Service.sanitizeFileName(image.getOriginalFilename());
             String imageUrl = s3Service.uploadFile(image, key);
             saved_destino.setImageUrl(imageUrl);
         }
@@ -131,7 +131,7 @@ public class DestinoController {
 
             for (MultipartFile secondaryImage : imageList) {
                 if (!secondaryImage.isEmpty()) {
-                    String key = "imagenes-secundarias/" + saved_destino.getId() + "/" + secondaryImage.getOriginalFilename();
+                    String key = "imagenes-secundarias/" + saved_destino.getId() + "/" + S3Service.sanitizeFileName(secondaryImage.getOriginalFilename());
                     String url = s3Service.uploadFile(secondaryImage, key);
                     secondaryUrls.add(url);
                 }
@@ -200,7 +200,7 @@ public class DestinoController {
 
         // Manejar imagen principal
         if (image != null && !image.isEmpty()) {
-            String key = "main-images/" + destino.getId() + "/" + image.getOriginalFilename();
+            String key = "main-images/" + destino.getId() + "/" + S3Service.sanitizeFileName(image.getOriginalFilename());
             String imageUrl = s3Service.uploadFile(image, key);
             destino.setImageUrl(imageUrl);
         }
@@ -220,7 +220,7 @@ public class DestinoController {
             // Agregar las nuevas imágenes
             for (MultipartFile secondaryImage : imageList) {
                 if (!secondaryImage.isEmpty()) {
-                    String key = "imagenes-secundarias/" + destino.getId() + "/" + secondaryImage.getOriginalFilename();
+                    String key = "imagenes-secundarias/" + destino.getId() + "/" + S3Service.sanitizeFileName(secondaryImage.getOriginalFilename());
                     String url = s3Service.uploadFile(secondaryImage, key);
                     existingSecondaryImages.add(url); // AGREGAR en lugar de reemplazar
                 }
