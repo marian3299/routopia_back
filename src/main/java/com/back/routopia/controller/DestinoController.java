@@ -59,6 +59,19 @@ public class DestinoController {
         return ResponseEntity.ok(responsePage);
     }
 
+    @Operation(summary = "Obtener una muestra aleatoria de destinos para la sección de recomendaciones del home")
+    @GetMapping("/recommendations")
+    public ResponseEntity<List<DestinoDTO>> find_random_destinos(
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        List<DestinoDTO> recommendations = destinoService.getRandomRecommendations(limit)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(recommendations);
+    }
+
     @Operation(summary = "Get Destino by id")
     @GetMapping("/{id}")
     public ResponseEntity<DestinoDTO> find_destino_by_id(@PathVariable("id") Long id) {

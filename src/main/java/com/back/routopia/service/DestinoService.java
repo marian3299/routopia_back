@@ -96,6 +96,10 @@ public class DestinoService {
         return destinoRespository.save(destino);
     }
 
+    public List<Destino> getRandomRecommendations(int limit) {
+        return destinoRespository.findRandom(limit);
+    }
+
     public Page<Destino> list_all(List<Long> categoryIds, String searchTerm, LocalDate availableDate, Pageable pageable) {
         Specification<Destino> spec = Specification.where(DestinoSpecification.hasCategoryIn(categoryIds));
 

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface DestinoRespository extends JpaRepository<Destino, Long>, JpaSpecificationExecutor<Destino> {
@@ -15,4 +16,8 @@ public interface DestinoRespository extends JpaRepository<Destino, Long>, JpaSpe
 
     @Query("SELECT COUNT(d) FROM Destino d JOIN d.traits t WHERE t.id = :traitId")
     long countByTraitId(@Param("traitId") Long traitId);
+
+    // Muestra aleatoria verdadera (orden al azar en la propia query), no un slice fijo.
+    @Query(value = "SELECT * FROM destinos ORDER BY RAND() LIMIT :limit", nativeQuery = true)
+    List<Destino> findRandom(@Param("limit") int limit);
 }
